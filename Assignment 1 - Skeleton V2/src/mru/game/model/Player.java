@@ -1,6 +1,46 @@
 package mru.game.model;
 
 public class Player {
+	String name; 
+	String id; 
+	int numOfWins;
+	
+	public Player(String name, String id, int numOfWins) {
+		this.name = name;
+		this.id = id;
+		this.numOfWins = numOfWins;
+		
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public int getNumOfWins() {
+		return numOfWins;
+	}
+
+	public void setNumOfWins(int numOfWins) {
+		this.numOfWins = numOfWins;
+	}
+	
+	public String toString() {
+		return "Name: " + name + "ID" + id + "Number of Wins:" + numOfWins;
+	}
+	
+	
 	
 	/**
 	 * This class represent each player record in the Database
