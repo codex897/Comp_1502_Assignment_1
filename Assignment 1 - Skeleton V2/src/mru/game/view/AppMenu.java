@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class AppMenu {
 		
 	Scanner input;
-		
+		// TEST
 	public AppMenu(){
 		input = new Scanner(System.in);
 	}
