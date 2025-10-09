@@ -6,6 +6,8 @@ import mru.game.model.Player;
 
 import mru.game.view.AppMenu;
 
+import java.io.*;
+
 public class GameManager {
 	
 	/* In this class toy'll need these methods:
@@ -16,25 +18,64 @@ public class GameManager {
 	 * A method to find the top players
 	 * Depending on your designing technique you may need and you can add more methods here 
 	 */
-	ArrayList<Player> players;
+	ArrayList<Player> playersArrayList;
 	AppMenu menu;
+	final String PLAYER_DATABASE_FILE = "res/CasinoInfo.txt";
 	
 	//Constructor
-	public GameManager(){
-		System.out.println("\t\tGamemaneger Check");
+	public GameManager() throws IOException{
+		System.out.println("\t\tGamemaneger Check"); //TEMPORARY
 		
 		menu = new AppMenu();
-		players = new ArrayList<>();
+		playersArrayList = new ArrayList<>();
 		
-		
-		startApp();
+		loadFile();
+		askName();
+		startGame();
 		
 		
 	}
 
-	//methods start here
+	private void loadFile() throws IOException {
+		File file = new File(PLAYER_DATABASE_FILE);
+		if (file.exists()) {  //If the File exists, READ and Initiate the WHILE LOOP
+			
+			FileReader fileRead = new FileReader(file);
+			BufferedReader rawPlayerData = new BufferedReader(fileRead);
+			String currentLine= rawPlayerData.readLine();
+			
+			while(currentLine != null) {
+				System.out.println(currentLine); //Temporary
+				String[] splittedLine = currentLine.split(",");
+				Player new_player= new Player(splittedLine[0],splittedLine[1],Integer.parseInt(splittedLine[2]));
+				//System.out.println(new_player.toString());// temporary to test if its in the player object
+				playersArrayList.add(new_player); //Add new player into the Player arraylist so the new object gets saved and not lost
+				
+				currentLine= rawPlayerData.readLine();
+				
+				
+				
+			}
+			
+		}
+		
+		
+	}
 	
-	private void startApp() {
+	private void askName() {
+		menu.showAskUserName();
+		//logic for verfying old or new user goes here
+		
+		
+		menu.showWelcomeOldU();
+		menu.showWelcomeNewU();
+		
+	}
+
+	//methods start here
+	//
+	private void startGame() {
+		
 		while(true) {
 			
 			String userInput= menu.showMainMenu(); //this shows menu  and validates  the input in the menu class
