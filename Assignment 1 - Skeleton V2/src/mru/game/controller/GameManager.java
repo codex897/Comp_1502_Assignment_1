@@ -30,7 +30,7 @@ public class GameManager {
 		playersArrayList = new ArrayList<>();
 		
 		loadFile();
-		askName();
+		
 		startGame();
 		
 		
@@ -50,11 +50,8 @@ public class GameManager {
 				Player new_player= new Player(splittedLine[0],splittedLine[1],Integer.parseInt(splittedLine[2]));
 				//System.out.println(new_player.toString());// temporary to test if its in the player object
 				playersArrayList.add(new_player); //Add new player into the Player arraylist so the new object gets saved and not lost
-				
+				//secondArrayList.add(new-player(;
 				currentLine= rawPlayerData.readLine();
-				
-				
-				
 			}
 			
 		}
@@ -62,19 +59,8 @@ public class GameManager {
 		
 	}
 	
-	private void askName() {
-		menu.showAskUserName();
-		//logic for verfying old or new user goes here
-		
-		
-		menu.showWelcomeOldU();
-		menu.showWelcomeNewU();
-		
-	}
-
-	//methods start here
-	//
 	private void startGame() {
+		askName();
 		
 		while(true) {
 			
@@ -99,7 +85,16 @@ public class GameManager {
 			}
 		}
 	}
-
+	
+	private void askName() {
+//		menu.showAskUserName();
+		//logic for verfying old or new user goes here
+		
+		
+//		menu.showWelcomeOldU();
+//		menu.showWelcomeNewU();
+//		
+	}
 			
 
 		
@@ -147,7 +142,13 @@ public class GameManager {
 
 	private void searchTop() {
 		// TODO logic to search for the top
+//		System.out.println(playersArrayList.get(2).getNumOfWins());
+		//SOURCE: https://www.w3schools.com/java/java_advanced_sorting.asp
+		playersArrayList.sort(null);
+		System.out.println("temporary\n" +playersArrayList); // temporary
 		menu.showSearchTop();
+
+		
 		
 	}
 	
