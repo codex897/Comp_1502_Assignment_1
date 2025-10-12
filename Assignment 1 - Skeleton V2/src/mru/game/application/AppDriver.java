@@ -1,13 +1,21 @@
 package mru.game.application;
 
+import java.io.IOException;
 
-public class AppDriver {
+import mru.game.controller.GameManager;
 
-	public static void main(String[] args) {
+public class AppDriver{
+
+	public static void main(String[] args) throws IOException {
 		
 		// This is the starting point of the project!
 		// hint - It usually calls method from GameManager class to start the app, so only one or two lines will be written here
-
+		
+		//Testing commit
+		System.out.println("\t\tAppdriver Check");
+		
+		GameManager run = new GameManager();
+		
 	}
 
 }

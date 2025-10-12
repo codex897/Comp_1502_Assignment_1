@@ -1,6 +1,6 @@
 package mru.game.model;
 
-public class Player {
+public class Player implements Comparable<Player> {
 	String name; 
 	String id; 
 	int numOfWins;
@@ -40,6 +40,13 @@ public class Player {
 		return "Name: " + name + "ID" + id + "Number of Wins:" + numOfWins;
 	}
 	
+	public int compareTo(Player otherPlayer) {
+		/*creates the comparison rules for .sort method in GameManager
+		 * Rule: Sort by listing top score to lowest score
+		 */
+		
+		return (otherPlayer.getNumOfWins() - this.getNumOfWins());
+	}
 	
 	
 	/**
