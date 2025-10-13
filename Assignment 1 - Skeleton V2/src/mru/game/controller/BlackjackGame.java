@@ -7,4 +7,7 @@ public class BlackjackGame {
 	 * You should use CardDeck class here
 	 * See the instructions for the game rules
 	 */
+	
+	private Player player;
+	private Dealer dealer;
 }
