@@ -36,7 +36,6 @@ public class GameManager {
 		
 	}
 
-<<<<<<< HEAD
    public void mainMenu() {
 	while (true) {
         displayGameMenu();
@@ -73,7 +72,6 @@ public class GameManager {
     }
 }
 
-=======
 	private void loadFile() throws IOException {
 		File file = new File(PLAYER_DATABASE_FILE);
 		if (file.exists()) {  //If the File exists, READ and Initiate the WHILE LOOP
@@ -190,7 +188,6 @@ public class GameManager {
 		
 	}
 	
->>>>>>> ea7200b8aec809c025a60a9638ef0807397b02b5
 	
 public void showSearchMenu() {
 	
