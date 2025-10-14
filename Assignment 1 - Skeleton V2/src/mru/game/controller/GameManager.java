@@ -45,7 +45,7 @@ public class GameManager {
 			String currentLine= rawPlayerData.readLine();
 			
 			while(currentLine != null) {
-				System.out.println(currentLine); //Temporary
+//				System.out.println(currentLine); //Temporary
 				String[] splittedLine = currentLine.split(",");
 				Player new_player= new Player(splittedLine[0],splittedLine[1],Integer.parseInt(splittedLine[2]));
 				//System.out.println(new_player.toString());// temporary to test if its in the player object
@@ -53,14 +53,14 @@ public class GameManager {
 				//secondArrayList.add(new-player(;
 				currentLine= rawPlayerData.readLine();
 			}
-			
+			rawPlayerData.close();
 		}
 		
 		
 	}
 	
-	private void startGame() {
-		askName();
+	private void startGame() throws IOException {
+		String userName = askUserName().getName();
 		
 		while(true) {
 			
@@ -73,7 +73,7 @@ public class GameManager {
 					
 					
 				case "2":
-					searchByName();
+					searchPlayer();
 					
 					break;
 				case "3":
@@ -85,21 +85,8 @@ public class GameManager {
 			}
 		}
 	}
-	
-	private void askName() {
-//		menu.showAskUserName();
-		//logic for verfying old or new user goes here
 		
-		
-//		menu.showWelcomeOldU();
-//		menu.showWelcomeNewU();
-//		
-	}
-			
-
-		
-		
-	private void searchByName() {
+	private void searchPlayer() {
 		String userInputSearch = menu.showSearchMenu(); //this shows search menu  and validates  the input in the menu class
 		switch (userInputSearch) {
 			case "1":
@@ -107,7 +94,7 @@ public class GameManager {
 				break;
 			
 			case "2": 
-				searchName();
+				searchName(menu.showAskName()); // showAskName() prompts a menu and asks the user to enter a name, then returns user input string data
 				break;
 			
 			case "3":
@@ -116,12 +103,46 @@ public class GameManager {
 			default:
 				menu.showInputErrorMessage();
 		
+		}
+
+
+
+
+
 	}
+	
+	
+	
+	
+	private Player askUserName() {
+		//logic for verfying old or new user goes here
+		String userString = menu.showAskUserName();
+		Player user = searchName(userString); 
+		
+		/*
+		 * After searching name,
+		 * If searchName() does return an existing player then return that existing player
+		 * If not create a new player and  add to array
+		 * then return that new player
+		 */
+		
+		if (user != null) {
+			menu.showWelcomeOldU(user.getName());
+			return user;
+		} else {
+			menu.showWelcomeNewU(userString);
+			Player newUser = createNewUser(userString);
+			playersArrayList.add(newUser);
+			return newUser;
+		}
+	}
+	
 
-
-
-
-
+	private  Player createNewUser(String newPlayer) {
+		// TODO Auto-generated method stub
+		return new Player(newPlayer,"0", 0);
+		
+		
 	}
 
 	private void playGame() {
@@ -129,22 +150,37 @@ public class GameManager {
 		
 	}
 
-	private void save() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	private void searchName() {
+	private Player searchName(String playerName) {
 		// TODO logic to search for name
-		menu.showAskName();
+		// menu.showAskName(); temporary
 		
+		/*
+		 * when this method is given a name,
+		 * compare the name with each player name in the ArrayList,
+		 * If a given name is the same as the array list, then return that Player object
+		 * If not, then return null
+		 * 
+		 * This method can be reused, when searching for any name
+		 */
+		
+		for (Player p: playersArrayList) {
+			if (playerName.equals(p.getName())) {
+				System.out.println("\nplayer exists");
+				return p;
+			}
+	
+		}
+		return null;
 	}
 
 	private void searchTop() {
 		// TODO logic to search for the top
-//		System.out.println(playersArrayList.get(2).getNumOfWins());
+		
+		//System.out.println(playersArrayList.get(2).getNumOfWins());
 		//SOURCE: https://www.w3schools.com/java/java_advanced_sorting.asp
 		playersArrayList.sort(null);
+		
 		System.out.println("temporary\n" +playersArrayList); // temporary
 		menu.showSearchTop();
 
@@ -152,6 +188,16 @@ public class GameManager {
 		
 	}
 	
-	
+	private void save() throws IOException {
+		// TODO Auto-generated method stub
+		FileWriter filewriter = new FileWriter(PLAYER_DATABASE_FILE);
+		PrintWriter outputFile = new PrintWriter(filewriter);
+		
+		
+		for (Player p: playersArrayList) {
+			outputFile.println(p.getName() + "," + p.getId() + "," + p.getNumOfWins());
+		}
+		outputFile.close();
+	}
 
 }

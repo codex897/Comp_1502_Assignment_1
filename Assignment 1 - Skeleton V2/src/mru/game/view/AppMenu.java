@@ -2,6 +2,8 @@ package mru.game.view;
 
 import java.util.Scanner;
 
+import mru.game.model.Player;
+
 public class AppMenu {
 		
 	/**
@@ -55,6 +57,25 @@ public class AppMenu {
 	public void showInputErrorMessage() {
 		System.out.println("Invalid Input, Try again");
 		
+	}
+
+
+	public String showAskUserName() {
+		// TODO Auto-generated method stub
+		System.out.println("WHat is your name?: ");
+		return  input.nextLine();
+	}
+
+
+	public void showWelcomeOldU(String user) {
+		// TODO Shows a message if the person playing this game exists
+		System.out.println("welcome old player");
+	}
+
+
+	public void showWelcomeNewU(String user) {
+		// TODO  Shows a message if the person playing this game does not exist in the file
+		System.out.println("welcome new player");
 	}
 
 
