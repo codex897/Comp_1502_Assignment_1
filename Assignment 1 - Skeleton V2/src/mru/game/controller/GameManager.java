@@ -36,6 +36,44 @@ public class GameManager {
 		
 	}
 
+<<<<<<< HEAD
+   public void mainMenu() {
+	while (true) {
+        displayGameMenu();
+
+        // Gets user input and also allows for it to not be case sensitive
+        String choice = scanner.nextLine().trim().toLowerCase();
+
+        // Process users choices
+        switch (choice) {
+            case "p":
+                System.out.print("Please enter your name to play: ");
+                String playerName = scanner.nextLine().trim();
+                Player currentPlayer = searchPlayerByName(playerName);
+                if (currentPlayer == null) {
+                    // If the player is not found, create a new player with a default balance
+                    System.out.println("Player not found. Creating a new profile.");
+                    int defaultBalance = 100; // Set a default balance for new players
+                    currentPlayer = new Player(playerName, defaultBalance, 0);
+                    players.add(currentPlayer); // Add the new player to the list
+                    savePlayerData(); // Save the new player data
+                }
+                playGame(currentPlayer); // Now play the game with the found or newly created player
+                break;
+            case "s":
+                showSearchMenu();
+                break;
+            case "e":
+                exitGame();
+                break;
+            default:
+                System.out.println("Invalid choice. Please try again.");
+        }
+        
+    }
+}
+
+=======
 	private void loadFile() throws IOException {
 		File file = new File(PLAYER_DATABASE_FILE);
 		if (file.exists()) {  //If the File exists, READ and Initiate the WHILE LOOP
@@ -153,6 +191,15 @@ public class GameManager {
 		
 	}
 	
+>>>>>>> ea7200b8aec809c025a60a9638ef0807397b02b5
 	
+public void showSearchMenu() {
+	
+}
+
+
+public void  savePlayerData() {
+	
+}
 
 }

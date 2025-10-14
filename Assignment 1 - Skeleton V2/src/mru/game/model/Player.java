@@ -1,14 +1,23 @@
 package mru.game.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import mru.game.controller.Card;
+
 public class Player implements Comparable<Player> {
 	String name; 
 	String id; 
 	int numOfWins;
+	private int balance;
+	private List<Card> hand;
 	
-	public Player(String name, String id, int numOfWins) {
+	public Player(String name, String id, int numOfWins, int startingBalance) {
 		this.name = name;
 		this.id = id;
+		this.balance = startingBalance;
 		this.numOfWins = numOfWins;
+		this.hand = new ArrayList<>();
 		
 	}
 
@@ -36,6 +45,23 @@ public class Player implements Comparable<Player> {
 		this.numOfWins = numOfWins;
 	}
 	
+	public int getBalance() {
+		return balance;
+	}
+	
+	public void setBalance(int balance) {
+		this.balance = balance;
+	}
+	
+	public void incrementWins() {
+		this.numOfWins++;
+	}
+	
+	public void emptyHand() {
+		hand.clear();
+	}
+	
+	@Override
 	public String toString() {
 		return "Name: " + name + "ID" + id + "Number of Wins:" + numOfWins;
 	}
