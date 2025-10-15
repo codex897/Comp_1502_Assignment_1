@@ -158,6 +158,7 @@ public class GameManager {
 	private Player playGame(Player userName) {
 		// TODO logic for playing the game
 		//acccepst the player object
+		return null;
 		
 		
 	}
