@@ -24,15 +24,13 @@ public class GameManager {
 	
 	//Constructor
 	public GameManager() throws IOException{
-		System.out.println("\t\tGamemaneger Check"); //TEMPORARY
-		
 		menu = new AppMenu();
 		playersArrayList = new ArrayList<>();
 		
 		loadFile();
 		
 		startGame();
-		
+		//test commit////
 		
 	}
 
@@ -60,7 +58,6 @@ public class GameManager {
 	}
 	
 	private void startGame() throws IOException {
-		String userName = askUserName().getName();
 		
 		while(true) {
 			
@@ -68,12 +65,13 @@ public class GameManager {
 			
 			switch (userInput) {
 				case "1":
-					playGame();
+					Player currentUser = askUserName();
+					playGame(currentUser);
 					break;
 					
 					
 				case "2":
-					searchPlayer();
+					searchPlayerMenu();
 					
 					break;
 				case "3":
@@ -86,7 +84,7 @@ public class GameManager {
 		}
 	}
 		
-	private void searchPlayer() {
+	private void searchPlayerMenu() {
 		String userInputSearch = menu.showSearchMenu(); //this shows search menu  and validates  the input in the menu class
 		switch (userInputSearch) {
 			case "1":
@@ -94,7 +92,7 @@ public class GameManager {
 				break;
 			
 			case "2": 
-				searchName(menu.showAskName()); // showAskName() prompts a menu and asks the user to enter a name, then returns user input string data
+				searchForName();
 				break;
 			
 			case "3":
@@ -110,6 +108,16 @@ public class GameManager {
 
 
 	}
+	private void searchForName() {
+		Player playerInfo = searchNameValidation(menu.showAskName()); // showAskName() prompts a menu and asks the user to enter a name, then returns user input string data
+		
+		if (playerInfo != null) {
+			menu.showPlayerInfo(playerInfo);
+		}
+		else {
+			menu.showPlayerNotFound();
+		}
+	}
 	
 	
 	
@@ -117,11 +125,11 @@ public class GameManager {
 	private Player askUserName() {
 		//logic for verfying old or new user goes here
 		String userString = menu.showAskUserName();
-		Player user = searchName(userString); 
+		Player user = searchNameValidation(userString); 
 		
 		/*
 		 * After searching name,
-		 * If searchName() does return an existing player then return that existing player
+		 * If searchNameValidation() does return an existing player then return that existing player
 		 * If not create a new player and  add to array
 		 * then return that new player
 		 */
@@ -147,13 +155,15 @@ public class GameManager {
 		
 	}
 
-	private void playGame() {
-		// TODO Auto-generated method stub
+	private Player playGame(Player userName) {
+		// TODO logic for playing the game
+		//acccepst the player object
+		
 		
 	}
 
 
-	private Player searchName(String playerName) {
+	private Player searchNameValidation(String playerName) {
 		// TODO logic to search for name
 		// menu.showAskName(); temporary
 		
@@ -168,7 +178,6 @@ public class GameManager {
 		
 		for (Player p: playersArrayList) {
 			if (playerName.equals(p.getName())) {
-				System.out.println("\nplayer exists");
 				return p;
 			}
 	
@@ -196,7 +205,7 @@ public class GameManager {
 		PrintWriter outputFile = new PrintWriter(filewriter);
 		
 		
-		for (Player p: playersArrayList) {
+		for (Player p: playersArrayList) { // puts all the players in the list into the outputfile/database
 			outputFile.println(p.getName() + "," + p.getId() + "," + p.getNumOfWins());
 		}
 		outputFile.close();

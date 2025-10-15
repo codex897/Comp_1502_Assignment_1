@@ -59,7 +59,7 @@ public class AppMenu {
 		
 	}
 
-
+//////////////////////////////////////////////////////
 	public String showAskUserName() {
 		// TODO Auto-generated method stub
 		System.out.println("WHat is your name?: ");
@@ -78,5 +78,18 @@ public class AppMenu {
 		System.out.println("welcome new player");
 	}
 
+
+	public void showPlayerInfo(Player playerInfo) {
+		// TODO when the user searches for a player show there stats
+		System.out.println("player found");
+	}
+
+
+	public void showPlayerNotFound() {
+		// TODO When a player searches for a player and the player does not exists
+		System.out.println("player not found");
+		
+	}
+//////////////////////////////////////////////////////
 
 }
