@@ -47,7 +47,7 @@ public class GameManager {
 			while(currentLine != null) {
 //				System.out.println(currentLine); //Temporary
 				String[] splittedLine = currentLine.split(",");
-				Player new_player= new Player(splittedLine[0],splittedLine[1],Integer.parseInt(splittedLine[2]));
+				Player new_player= new Player(splittedLine[0],Integer.parseInt(splittedLine[1]),Integer.parseInt(splittedLine[2]));
 				//System.out.println(new_player.toString());// temporary to test if its in the player object
 				playersArrayList.add(new_player); //Add new player into the Player arraylist so the new object gets saved and not lost
 				//secondArrayList.add(new-player(;
@@ -126,7 +126,7 @@ public class GameManager {
 		 * then return that new player
 		 */
 		
-		if (user != null) {
+		if (user != null) { // if user exists
 			menu.showWelcomeOldU(user.getName());
 			return user;
 		} else {
@@ -138,9 +138,11 @@ public class GameManager {
 	}
 	
 
-	private  Player createNewUser(String newPlayer) {
+	private  Player createNewUser(String newPlayerName) {
 		// TODO Auto-generated method stub
-		return new Player(newPlayer,"0", 0);
+		int initialBal = 100;
+		int initialWin = 0;
+		return new Player(newPlayerName,initialBal, initialWin);
 		
 		
 	}

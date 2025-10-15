@@ -4,3 +4,4 @@ Ali,75,10
 poop,0,0
 DOom_Slayer,0,0
 celery,0,0
+Chicken,100,0

@@ -2,12 +2,12 @@ package mru.game.model;
 
 public class Player implements Comparable<Player> {
 	String name; 
-	String id; 
+	int balance; 
 	int numOfWins;
 	
-	public Player(String name, String id, int numOfWins) {
+	public Player(String name, int balance, int numOfWins) {
 		this.name = name;
-		this.id = id;
+		this.balance = balance;
 		this.numOfWins = numOfWins;
 		
 	}
@@ -20,12 +20,12 @@ public class Player implements Comparable<Player> {
 		this.name = name;
 	}
 
-	public String getId() {
-		return id;
+	public int getId() {
+		return balance;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setId(int id) {
+		this.balance = balance;
 	}
 
 	public int getNumOfWins() {
@@ -37,7 +37,7 @@ public class Player implements Comparable<Player> {
 	}
 	
 	public String toString() {
-		return "Name: " + name + "ID" + id + "Number of Wins:" + numOfWins;
+		return "Name: " + name + "BALANCE" + balance + "Number of Wins:" + numOfWins;
 	}
 	
 	public int compareTo(Player otherPlayer) {
