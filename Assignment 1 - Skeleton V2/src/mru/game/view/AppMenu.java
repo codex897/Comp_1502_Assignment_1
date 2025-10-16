@@ -11,12 +11,12 @@ public class AppMenu {
 	 * This class will be used to show the menus and sub menus to the user
 	 * It also prompts the user for the inputs and validates them 
 	 */
-	Scanner input;
+	private Scanner input;
 	
 	/**
 	 * This displays a border made of "*"
 	 */
-	final String X = "***************************************************************************";
+	private final String X = "***************************************************************************";
 	
 	/**
 	 * This constructor initiates the Scanner

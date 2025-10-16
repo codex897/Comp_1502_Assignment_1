@@ -14,11 +14,18 @@ import mru.game.controller.Card;
  */
 public class Player implements Comparable<Player> {
 	
-	String name; 
-	int numOfWins;
+	/**
+	 * This field is the name of the player
+	 */
+	private String name; 
 	
 	/**
-	 * TThis field is the amount of money
+	 * This field is the amount of wins the player has
+	 */
+	private int numOfWins;
+	
+	/**
+	 * This field is the amount of money the player has
 	 */
 	private int balance;
 	

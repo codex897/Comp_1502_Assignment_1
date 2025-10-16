@@ -31,14 +31,14 @@ public class GameManager {
 	/**
 	 * This ArrayList Holds a list of Player Objects saved in the database
 	 */
-	ArrayList<Player> playersArrayList;
+	private ArrayList<Player> playersArrayList;
 	
-	AppMenu menu;
+	private AppMenu menu;
 	
 	/**
 	 * This Final Variable holds the path for to the database
 	 */
-	final String PLAYER_DATABASE_FILE = "res/CasinoInfo.txt";
+	private final String PLAYER_DATABASE_FILE = "res/CasinoInfo.txt";
 	
 	/**
 	 * This constructor initiates the AppMenu and the ArrayList and calls methods to load the saved data and start the game
