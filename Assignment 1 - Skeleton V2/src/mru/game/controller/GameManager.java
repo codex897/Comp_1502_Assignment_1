@@ -43,9 +43,9 @@ public class GameManager {
 			String currentLine= rawPlayerData.readLine();
 			
 			while(currentLine != null) {
-//				System.out.println(currentLine); //Temporary
+//				System.out.println(currentLine); 
 				String[] splittedLine = currentLine.split(",");
-				Player new_player= new Player(splittedLine[0],Integer.parseInt(splittedLine[1]),Integer.parseInt(splittedLine[2]));
+				Player new_player= new Player(splittedLine[0].toLowerCase(),Integer.parseInt(splittedLine[1]),Integer.parseInt(splittedLine[2]));
 				//System.out.println(new_player.toString());// temporary to test if its in the player object
 				playersArrayList.add(new_player); //Add new player into the Player arraylist so the new object gets saved and not lost
 				//secondArrayList.add(new-player(;
@@ -64,17 +64,17 @@ public class GameManager {
 			String userInput= menu.showMainMenu(); //this shows menu  and validates  the input in the menu class
 			
 			switch (userInput) {
-				case "1":
+				case "p":
 					Player currentUser = askUserName();
 					playGame(currentUser);
 					break;
 					
 					
-				case "2":
+				case "s":
 					searchPlayerMenu();
 					
 					break;
-				case "3":
+				case "e":
 					save();
 					return; //exit and stops the code
 				
@@ -87,15 +87,15 @@ public class GameManager {
 	private void searchPlayerMenu() {
 		String userInputSearch = menu.showSearchMenu(); //this shows search menu  and validates  the input in the menu class
 		switch (userInputSearch) {
-			case "1":
+			case "t":
 				searchTop();
 				break;
 			
-			case "2": 
+			case "n": 
 				searchForName();
 				break;
 			
-			case "3":
+			case "b":
 				return; //
 				
 			default:
@@ -135,12 +135,12 @@ public class GameManager {
 		 */
 		
 		if (user != null) { // if user exists
-			menu.showWelcomeOldU(user.getName());
+			menu.showWelcomeOldUser(user);
 			return user;
 		} else {
-			menu.showWelcomeNewU(userString);
 			Player newUser = createNewUser(userString);
 			playersArrayList.add(newUser);
+			menu.showWelcomeNewUser(newUser);
 			return newUser;
 		}
 	}
@@ -180,6 +180,7 @@ public class GameManager {
 		for (Player p: playersArrayList) {
 			if (playerName.equals(p.getName())) {
 				return p;
+			
 			}
 	
 		}
@@ -205,9 +206,10 @@ public class GameManager {
 		FileWriter filewriter = new FileWriter(PLAYER_DATABASE_FILE);
 		PrintWriter outputFile = new PrintWriter(filewriter);
 		
+		menu.showSaveProgress();
 		
 		for (Player p: playersArrayList) { // puts all the players in the list into the outputfile/database
-			outputFile.println(p.getName() + "," + p.getId() + "," + p.getNumOfWins());
+			outputFile.println(p.getName() + "," + p.getBalance() + "," + p.getNumOfWins());
 		}
 		outputFile.close();
 	}

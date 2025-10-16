@@ -1,8 +1,9 @@
-Khosro,1639,18
-Eli,1000,18
-Ali,75,10
+khosro,1639,18
+eli,1000,18
+ali,75,10
 poop,0,0
-DOom_Slayer,0,0
+doom_slayer,0,0
 celery,0,0
-Chicken,100,0
-JOJO,100,0
+chicken,100,0
+boy,100,0
+drake,100,0
