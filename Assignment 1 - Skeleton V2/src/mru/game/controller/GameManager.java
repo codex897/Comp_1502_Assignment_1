@@ -66,13 +66,10 @@ public class GameManager {
 			BufferedReader rawPlayerData = new BufferedReader(fileRead);
 			String currentLine= rawPlayerData.readLine();
 			
-			while(currentLine != null) {
-//				System.out.println(currentLine); 
+			while(currentLine != null) { // if the line is not empty continue the loop
 				String[] splittedLine = currentLine.split(",");
 				Player new_player= new Player(splittedLine[0].toLowerCase(),Integer.parseInt(splittedLine[1]),Integer.parseInt(splittedLine[2]));
-				//System.out.println(new_player.toString());// temporary to test if its in the player object
 				playersArrayList.add(new_player); //Add new player into the Player arraylist so the new object gets saved and not lost
-				//secondArrayList.add(new-player(;
 				currentLine= rawPlayerData.readLine();
 			}
 			rawPlayerData.close();
@@ -105,7 +102,7 @@ public class GameManager {
 					break;
 				case "e":
 					save();
-					return; //exit and stops the code
+					return; //exits out of the loop and stops the code
 				
 				default:
 					menu.showInputErrorMessage();
@@ -135,11 +132,6 @@ public class GameManager {
 				menu.showInputErrorMessage();
 		
 		}
-
-
-
-
-
 	}
 	
 	/**
@@ -148,17 +140,19 @@ public class GameManager {
 	 * 
 	 */
 	private void searchForName() {
-		Player playerInfo = searchNameValidation(menu.showAskName()); // showAskName() prompts a menu and asks the user to enter a name, then returns user input string data
+		/*
+		 * showAskName() prompts a menu and asks the user to enter a name, then returns user input string data
+		 * to be validated if it exists
+		 */
+		Player playerInfo = searchNameValidation(menu.showAskName()); 
 		
-		if (playerInfo != null) {
+		if (playerInfo != null) { // if the player exists then show that players information
 			menu.showPlayerInfo(playerInfo);
 		}
-		else {
+		else { //if the player does not exist show a message to indicate that they dont exists
 			menu.showPlayerNotFound();
 		}
 	}
-	
-	
 	
 	/**
 	 * This method calls to asks the name of the current player, if the current player is a returning player then it will call a method that greets 
@@ -178,10 +172,10 @@ public class GameManager {
 		 * then return that new player
 		 */
 		
-		if (user != null) { // if user exists
+		if (user != null) { // if user exists greet back the user
 			menu.showWelcomeOldUser(user);
 			return user;
-		} else {
+		} else { //if user is new then create a new player object and add them to playerArrayList and greet them
 			Player newUser = createNewUser(userString);
 			playersArrayList.add(newUser);
 			menu.showWelcomeNewUser(newUser);
@@ -237,27 +231,34 @@ public class GameManager {
 		for (Player p: playersArrayList) {
 			if (playerName.equals(p.getName())) {
 				return p;
-			
 			}
-	
 		}
+		
 		return null;
 	}
 
 	/**
 	 * This method sorts the player with the most number of wins in descending order and calls another method to display it
+	 * If there are no players to compare to, then call a method to display an indication of this
 	 * 
 	 */
 	private void searchTop() {
-		// TODO logic to search for the top
+		// logic to search for the top
 		
-		//System.out.println(playersArrayList.get(2).getNumOfWins());
+		ArrayList<Player> topPlayersArrayList = new ArrayList<Player>(playersArrayList); // create a new arraylist containing the top players from descending order
+		
+		
 		//SOURCE: https://www.w3schools.com/java/java_advanced_sorting.asp
-		playersArrayList.sort(null);
+		topPlayersArrayList.sort(null); //sort using the combination of .sort and compareTo in the player class
 		
-		menu.showSearchTop(playersArrayList);
+		if (topPlayersArrayList.isEmpty()) { //Takes care of a scenario when the database is empty
+			menu.showNoTopPlayers();
+		}
+		else {
+		menu.showSearchTop(topPlayersArrayList);
 		menu.enterToContinue();
-		
+		}
+
 		
 	}
 	

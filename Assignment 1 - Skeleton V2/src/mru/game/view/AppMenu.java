@@ -169,6 +169,13 @@ public class AppMenu {
 		
 	}
 
+	/**
+	 * Displays a message indicating that there are no players in the database to compare wins to
+	 */
+	public void showNoTopPlayers() {
+		System.out.println("There are no players yet to add to the leaderboards");
+	}
+
 //////////////////////////////////////////////////////
 
 
