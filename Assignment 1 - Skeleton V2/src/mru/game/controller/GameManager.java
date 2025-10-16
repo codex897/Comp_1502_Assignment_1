@@ -41,6 +41,17 @@ public class GameManager {
 	private final String PLAYER_DATABASE_FILE = "res/CasinoInfo.txt";
 	
 	/**
+	 * This is the initial balance of NEW players that are not in the database
+	 */
+	private final int INITIAL_BAL = 100; 
+	
+	/**
+	 * This is the initial win of NEW players that are not in the database
+	 * new players should not have any wins in our database
+	 */
+	private final int INITIAL_WIN = 0;
+	
+	/**
 	 * This constructor initiates the AppMenu and the ArrayList and calls methods to load the saved data and start the game
 	 */
 	public GameManager() throws IOException{
@@ -68,7 +79,7 @@ public class GameManager {
 			
 			while(currentLine != null) { // if the line is not empty continue the loop
 				String[] splittedLine = currentLine.split(",");
-				Player new_player= new Player(splittedLine[0].toLowerCase(),Integer.parseInt(splittedLine[1]),Integer.parseInt(splittedLine[2]));
+				Player new_player= new Player(splittedLine[0],Integer.parseInt(splittedLine[1]),Integer.parseInt(splittedLine[2]));
 				playersArrayList.add(new_player); //Add new player into the Player arraylist so the new object gets saved and not lost
 				currentLine= rawPlayerData.readLine();
 			}
@@ -190,9 +201,7 @@ public class GameManager {
 	 * @param newPlayerName the Players name that was not found in the database
 	 */
 	private  Player createNewUser(String newPlayerName) {
-		int initialBal = 100;
-		int initialWin = 0;
-		return new Player(newPlayerName,initialBal, initialWin);
+		return new Player(newPlayerName,INITIAL_BAL, INITIAL_WIN);
 		
 		
 	}
@@ -229,11 +238,10 @@ public class GameManager {
 		 */
 		
 		for (Player p: playersArrayList) {
-			if (playerName.equals(p.getName())) {
+			if (playerName.toLowerCase().equals(p.getName().toLowerCase())) {
 				return p;
 			}
 		}
-		
 		return null;
 	}
 
@@ -255,6 +263,7 @@ public class GameManager {
 			menu.showNoTopPlayers();
 		}
 		else {
+			
 		menu.showSearchTop(topPlayersArrayList);
 		menu.enterToContinue();
 		}

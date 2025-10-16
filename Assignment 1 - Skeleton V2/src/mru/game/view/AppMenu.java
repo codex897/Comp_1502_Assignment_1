@@ -61,7 +61,7 @@ public class AppMenu {
 	}
 
 	/**
-	 * This method displays a question asking for the name of the current player and prompts user for an input to enter there name
+	 * This method displays a question asking for the name of the searched player and prompts user for an input to enter there name
 	 * 
 	 * @return the name of the user in lower case
 	 */
@@ -107,7 +107,7 @@ public class AppMenu {
 	public String showAskUserName() {
 		
 		System.out.println("What is your name: ");
-		return input.nextLine().trim().toLowerCase();	
+		return input.nextLine().trim();	
 	}
 
 

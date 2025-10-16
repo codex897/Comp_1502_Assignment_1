@@ -7,3 +7,5 @@ khosro,1639,18
 eli,1000,18
 ali,75,10
 poop,0,0
+JOJOJO,100,0
+LebronJAMES,999,99999
