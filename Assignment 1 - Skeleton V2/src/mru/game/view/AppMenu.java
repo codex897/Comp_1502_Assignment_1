@@ -1,5 +1,6 @@
 package mru.game.view;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import mru.game.model.Player;
@@ -11,14 +12,26 @@ public class AppMenu {
 	 * It also prompts the user for the inputs and validates them 
 	 */
 	Scanner input;
+	
+	/**
+	 * This displays a border made of "*"
+	 */
 	final String X = "***************************************************************************";
+	
+	/**
+	 * This constructor initiates the Scanner
+	 */
 	public AppMenu(){
 	
 	input = new Scanner(System.in);
 		
 	}
 		
-		
+	/**
+	 * This method displays the Main menu and prompts user for an input to choose where to go next
+	 * 
+	 * @return a string in lower case that represents the choice of the player
+	 */
 	public String showMainMenu() {
 		System.out.print("Select one of these options:\n");
 		System.out.println("\n\t(P) Play Game");
@@ -30,6 +43,12 @@ public class AppMenu {
 
 	}
 	
+	/**
+	 * This method displays the a sub menu to search for the top players or a specific player 
+	 * and prompts user for an input to choose where to go next
+	 * 
+	 * @return a string in lower case that represents the choice of the player 
+	 */
 	public String showSearchMenu() {
 		System.out.print("Select one of these options:\n");
 		System.out.println("\n\t(T) Top Player");
@@ -41,29 +60,51 @@ public class AppMenu {
 
 	}
 
+	/**
+	 * This method displays a question asking for the name of the current player and prompts user for an input to enter there name
+	 * 
+	 * @return the name of the user in lower case
+	 */
 	public String showAskName() {
-		// TODO Auto-generated method stub
 		System.out.println("Enter a name here:");
-		System.out.println("Press enter to go back to Main Menu");
 		return input.nextLine().trim().toLowerCase();	
 		}
 
-
-	public String showSearchTop() {
+	/**
+	 * This method displays the top users in descending order
+	 * 
+	 * 
+	 * @param playerList all the player sorted in the amount of wins in descending order 
+	 */
+	public void showSearchTop(ArrayList<Player> playerList) {
 		System.out.println("top player is");
-		System.out.println("Press " + "enter " + "to continue...");
-		return input.nextLine().trim().toLowerCase();		
+		System.out.println(playerList);
+	
 		}
-
-
-	public void showInputErrorMessage() {
-		System.out.println("Invalid Input, Try again");
-		
+	
+	/**
+	 * This method displays an instruction on how to continue and prompts user for input
+	 * 
+	 * @return an empty string
+	 */
+	public String enterToContinue(){
+		System.out.println("Press " + "enter " + "to continue...");
+		return input.nextLine().trim().toLowerCase();	
 	}
 
-//////////////////////////////////////////////////////
+	/**
+	 * This method displays an invalid input message
+	 */
+	public void showInputErrorMessage() {
+		System.out.println("Invalid Input, Try again");
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public String showAskUserName() {
-		// TODO Auto-generated method stub
+		
 		System.out.println("What is your name: ");
 		return input.nextLine().trim().toLowerCase();	}
 
