@@ -1,6 +1,7 @@
 package mru.game.controller;
 
 import java.io.InterruptedIOException;
+import java.util.List;
 import java.util.Scanner;
 
 import mru.game.model.Player;
@@ -19,6 +20,7 @@ public class BlackjackGame {
 	private CardDeck deck;
 	
 	private static final int MIN_BET = 2;
+	private static final boolean True = false;
 	
 	
 	
@@ -78,8 +80,20 @@ public class BlackjackGame {
 		
 		System.out.println("\n--- New Round ---");
 	}
-	
+	/**
+	 * Deals initial two cards to both player and dealer
+	 * Dealer gets one face up and one face down
+	 * Player gets both face up
+	 */
 	private void dealInitialCards(){
+		//First Player Card
+		player.addCardToHand(deck.dealCard());
+		//First Dealer Card
+		dealer.addCardToHand(deck.dealCard());
+		//Second Player Card
+		player.addCardToHand(deck.dealCard());
+		//Second Dealer Card
+		dealer.addCardToHand(deck.dealCard());
 		
 	}
 	
@@ -125,21 +139,60 @@ public class BlackjackGame {
 	}
 	
 	private void checkPlayerBalance() { //This method will make sure the player never plays with $0.
+		int balance = player.getBalance();
+		
+		if(balance >= 2) {
+			System.out.println("You have enough to play $" + balance + "!");
+		} else {
+			System.out.println("You don't have enough to play $" + balance + ".");
+		}
+		
 		
 	}
 	
 	
 	//Gameplay
 	
-	private void playerTurn() {
+	private void playerTurn(Scanner input) {
+		boolean keepPlaying = true;
 		
+		while(keepPlaying) {
+			System.out.println("\nYour Hand: " + player.getHand());
+			int handValue = calculateHandValue(player.getHand());
+			System.out.println("Your Total Hand Value: " + handValue);
+			
+			//Conditions set for if player bust
+			if (handValue > 21) {
+				System.out.println("You Busted!");
+				break; // Stops loop
+			}
+			
+			System.out.println("Would you like to \n(1) Hit \n(2) Stand ");
+			int choice = 0;
+			
+			choice = Integer.parseInt(input.nextLine());
+			
+			if (choice == 1) {
+				player.addCardToHand(deck.dealCard());
+				System.out.println("You drew a new card.");
+			}
+			
+			else if (choice == 2) {
+				System.out.println("You chose to stand.");
+				keepPlaying = false;
+			}
+			else {
+				System.out.println("Invalid Choice. Please enter 1 or 2");
+			}
+		}
 	}
 	
 	private void dealerTurn() { //hit <= 16, stand >= 17
 		
 	}
 	
-	private void calculateHandValue() {
+	private int calculateHandValue(List<Card> list) {
+		return bettingAmount;
 		
 	}
 	

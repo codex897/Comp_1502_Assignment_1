@@ -22,7 +22,7 @@ public class Dealer {
 		//Add code for when the dealer reveals the face down card if needed.
 	}
 	
-	public void cardAddedToHand(Card card) {
+	public void addCardToHand(Card card) {
 		hand.add(card);
 	}
 	

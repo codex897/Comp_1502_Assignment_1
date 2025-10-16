@@ -7,15 +7,13 @@ import mru.game.controller.Card;
 
 public class Player implements Comparable<Player> {
 	String name; 
-	String id; 
 	int numOfWins;
 	private int balance;
 	private List<Card> hand;
 	
-	public Player(String name, String id, int numOfWins, int startingBalance) {
+	public Player(String name, int balance, int numOfWins) {
 		this.name = name;
-		this.id = id;
-		this.balance = startingBalance;
+		this.balance = balance;
 		this.numOfWins = numOfWins;
 		this.hand = new ArrayList<>();
 		
@@ -28,15 +26,7 @@ public class Player implements Comparable<Player> {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
+	
 	public int getNumOfWins() {
 		return numOfWins;
 	}
@@ -61,9 +51,13 @@ public class Player implements Comparable<Player> {
 		hand.clear();
 	}
 	
+	public void addCardToHand(Card card) {
+		hand.add(card);
+	}
+	
 	@Override
 	public String toString() {
-		return "Name: " + name + "ID" + id + "Number of Wins:" + numOfWins;
+		return "Name: " + name + "Number of Wins:" + numOfWins;
 	}
 	
 	public int compareTo(Player otherPlayer) {
@@ -73,6 +67,10 @@ public class Player implements Comparable<Player> {
 		
 		return (otherPlayer.getNumOfWins() - this.getNumOfWins());
 	}
+
+	public List<Card> getHand() {
+        return hand;
+    }
 	
 	
 	/**

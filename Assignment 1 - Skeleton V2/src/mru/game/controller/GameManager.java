@@ -24,8 +24,6 @@ public class GameManager {
 	
 	//Constructor
 	public GameManager() throws IOException{
-		System.out.println("\t\tGamemaneger Check"); //TEMPORARY
-		
 		menu = new AppMenu();
 		playersArrayList = new ArrayList<>();
 		
@@ -33,47 +31,8 @@ public class GameManager {
 		
 		startGame();
 		
-		
 	}
 
-<<<<<<< HEAD
-   public void mainMenu() {
-	while (true) {
-        displayGameMenu();
-
-        // Gets user input and also allows for it to not be case sensitive
-        String choice = scanner.nextLine().trim().toLowerCase();
-
-        // Process users choices
-        switch (choice) {
-            case "p":
-                System.out.print("Please enter your name to play: ");
-                String playerName = scanner.nextLine().trim();
-                Player currentPlayer = searchPlayerByName(playerName);
-                if (currentPlayer == null) {
-                    // If the player is not found, create a new player with a default balance
-                    System.out.println("Player not found. Creating a new profile.");
-                    int defaultBalance = 100; // Set a default balance for new players
-                    currentPlayer = new Player(playerName, defaultBalance, 0);
-                    players.add(currentPlayer); // Add the new player to the list
-                    savePlayerData(); // Save the new player data
-                }
-                playGame(currentPlayer); // Now play the game with the found or newly created player
-                break;
-            case "s":
-                showSearchMenu();
-                break;
-            case "e":
-                exitGame();
-                break;
-            default:
-                System.out.println("Invalid choice. Please try again.");
-        }
-        
-    }
-}
-
-=======
 	private void loadFile() throws IOException {
 		File file = new File(PLAYER_DATABASE_FILE);
 		if (file.exists()) {  //If the File exists, READ and Initiate the WHILE LOOP
@@ -83,39 +42,42 @@ public class GameManager {
 			String currentLine= rawPlayerData.readLine();
 			
 			while(currentLine != null) {
-				System.out.println(currentLine); //Temporary
+//				System.out.println(currentLine); //Temporary
 				String[] splittedLine = currentLine.split(",");
-				Player new_player= new Player(splittedLine[0],splittedLine[1],Integer.parseInt(splittedLine[2]));
+				Player new_player= new Player(splittedLine[0], Integer.parseInt(splittedLine[1]), 0); //**I think something is wrong with this line had to put 0 or any number as the 3rd object for it to run - Haseeb**
 				//System.out.println(new_player.toString());// temporary to test if its in the player object
 				playersArrayList.add(new_player); //Add new player into the Player arraylist so the new object gets saved and not lost
 				//secondArrayList.add(new-player(;
 				currentLine= rawPlayerData.readLine();
 			}
-			
+			rawPlayerData.close();
 		}
 		
 		
 	}
 	
-	private void startGame() {
-		askName();
+	private void startGame() throws IOException {
 		
 		while(true) {
 			
-			String userInput= menu.showMainMenu(); //this shows menu  and validates  the input in the menu class
+			String userInput = menu.showMainMenu(); //this shows menu and validates the input in the menu class
 			
 			switch (userInput) {
-				case "1":
-					playGame();
+				case "p":
+					Player currentUser = askUserName();
+					playGame(currentUser);
 					break;
 					
 					
-				case "2":
-					searchByName();
+				case "s":
+					searchPlayerMenu();
 					
 					break;
-				case "3":
+				case "e":
 					save();
+					System.out.println("Saving...");
+					System.out.println("Done! Please visit us again!");
+
 					return; //exit and stops the code
 				
 				default:
@@ -123,67 +85,109 @@ public class GameManager {
 			}
 		}
 	}
-	
-	private void askName() {
-//		menu.showAskUserName();
-		//logic for verfying old or new user goes here
 		
-		
-//		menu.showWelcomeOldU();
-//		menu.showWelcomeNewU();
-//		
-	}
-			
-
-		
-		
-	private void searchByName() {
+	private void searchPlayerMenu() {
 		String userInputSearch = menu.showSearchMenu(); //this shows search menu  and validates  the input in the menu class
 		switch (userInputSearch) {
-			case "1":
+			case "t":
 				searchTop();
 				break;
 			
-			case "2": 
-				searchName();
+			case "n": 
+				searchForName();
 				break;
 			
-			case "3":
+			case "b":
 				return; //
 				
 			default:
 				menu.showInputErrorMessage();
 		
-	}
+		}
 
 
 
 
 
 	}
+	private void searchForName() {
+		Player playerInfo = searchNameValidation(menu.showAskName()); // showAskName() prompts a menu and asks the user to enter a name, then returns user input string data
+		
+		if (playerInfo != null) {
+			menu.showPlayerInfo(playerInfo);
+		}
+		else {
+			menu.showPlayerNotFound();
+		}
+	}
+	
+	
+	
+	
+	private Player askUserName() {
+		String name = menu.showAskUserName();
+		
+		Player foundPlayer = searchNameValidation(name);
+		
+		if(foundPlayer != null) {
+			menu.showWelcomeNew(foundPlayer);
+			return foundPlayer;
+		}
+		
+		Player newbie = new Player(name, 100, 0);
+			playersArrayList.add(newbie);
+		menu.showWelcomeOld(newbie);
+		return newbie;
+	}
+	
 
-	private void playGame() {
+	private  Player createNewUser(String newPlayerName) {
 		// TODO Auto-generated method stub
+		int initialBal = 100;
+		int initialWin = 0;
+		return new Player(newPlayerName, initialBal, initialWin);
 		
 		
 	}
 
-	private void save() {
-		// TODO Auto-generated method stub
+	private Player playGame(Player userName) {
+		// TODO logic for playing the game
+		//acccepst the player object
+		return null;
+		
 		
 	}
 
-	private void searchName() {
+
+	private Player searchNameValidation(String playerName) {
 		// TODO logic to search for name
-		menu.showAskName();
+		// menu.showAskName(); temporary
 		
+		/*
+		 * when this method is given a name,
+		 * compare the name with each player name in the ArrayList,
+		 * If a given name is the same as the array list, then return that Player object
+		 * If not, then return null
+		 * 
+		 * This method can be reused, when searching for any name
+		 */
+		
+		for (Player p: playersArrayList) {
+			if (playerName.equals(p.getName())) {
+				return p;
+			}
+	
+		}
+		return null;
 	}
 
 	private void searchTop() {
 		// TODO logic to search for the top
-//		System.out.println(playersArrayList.get(2).getNumOfWins());
+		
+		//System.out.println(playersArrayList.get(2).getNumOfWins());
 		//SOURCE: https://www.w3schools.com/java/java_advanced_sorting.asp
 		playersArrayList.sort(null);
+		
 		System.out.println("temporary\n" +playersArrayList); // temporary
 		menu.showSearchTop();
 
@@ -191,15 +195,16 @@ public class GameManager {
 		
 	}
 	
->>>>>>> ea7200b8aec809c025a60a9638ef0807397b02b5
-	
-public void showSearchMenu() {
-	
-}
-
-
-public void  savePlayerData() {
-	
-}
+	private void save() throws IOException {
+		// TODO Auto-generated method stub
+		FileWriter filewriter = new FileWriter(PLAYER_DATABASE_FILE);
+		PrintWriter outputFile = new PrintWriter(filewriter);
+		
+		
+		for (Player p: playersArrayList) { // puts all the players in the list into the outputfile/database
+			outputFile.println(p.getName() + "," + p.getNumOfWins());
+		}
+		outputFile.close();
+	}
 
 }
