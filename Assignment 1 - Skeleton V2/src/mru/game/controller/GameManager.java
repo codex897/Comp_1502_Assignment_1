@@ -256,7 +256,7 @@ public class GameManager {
 		playersArrayList.sort(null);
 		
 		menu.showSearchTop(playersArrayList);
-
+		menu.enterToContinue();
 		
 		
 	}

@@ -100,18 +100,23 @@ public class AppMenu {
 	}
 
 	/**
+	 * displays a question that ask what the current players name is
 	 * 
-	 * @return
+	 * @return the current users name as a string in lower case
 	 */
 	public String showAskUserName() {
 		
 		System.out.println("What is your name: ");
-		return input.nextLine().trim().toLowerCase();	}
+		return input.nextLine().trim().toLowerCase();	
+	}
 
 
-
+	/**
+	 * This method displays a greeting and shows retuning player  balance
+	 * 
+	 * @param user The  current returning player object
+	 */
 	public void showWelcomeOldUser(Player user) {
-		// TODO Shows a message if the person playing this game exists
 		String name = user.getName().toUpperCase();
 		int bal = user.getBalance();
 		
@@ -120,9 +125,13 @@ public class AppMenu {
 		System.out.println(X);
 	}
 
-
+	/**
+	 * This method displays a greeting and shows the balance of the new player
+	 * 
+	 * @param user the current new player object that previously did not exist in the database
+	 */
 	public void showWelcomeNewUser(Player user) {
-		// TODO  Shows a message if the person playing this game does not exist in the file
+		//  Shows a message if the person playing this game does not exist in the file
 		String name = user.getName().toUpperCase();
 		int bal = user.getBalance();
 		
@@ -131,20 +140,30 @@ public class AppMenu {
 		System.out.println(X);
 	}
 
+	/**
+	 * This method displays the name wins and balance of the player searched
+	 * 
+	 * @param playerInfo the player object for the player that was searched
+	 */
 	public void showPlayerInfo(Player playerInfo) {
-		// TODO when the user searches for a player show there stats
+		// when the user searches for a player show there stats
 		System.out.println("player found");
 	}
 
-
+	/**
+	 * Displays a message indicating that the player was not found when searching for them
+	 */
 	public void showPlayerNotFound() {
 		// TODO When a player searches for a player and the player does not exists
 		System.out.println("player not found");
 		
 	}
 	
+	/**
+	 * Displays a message indicating tha the saving is in progress and has finished
+	 */
 	public void showSaveProgress() {
-		// TODO SHow a visual to let user know its saving
+		// SHow a visual to let user know its saving
 		System.out.println("Saving...");
 		System.out.println("Done! Please visit us again!");
 		
