@@ -17,3 +17,4 @@ SpiDerX,100.0,0
 haseeb,40.0,0
 Freddy,100.0,0
 zain,100.0,0
+john,100.0,0
