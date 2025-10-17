@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import mru.game.model.Player;
-//Testing Commit
+
 public class BlackjackGame {
 
 	/**
@@ -37,7 +37,7 @@ public class BlackjackGame {
 	public void startGame(){
 		// Checks player balance for eligibility before starting any rounds.
 		
-		if (player.getBalance() <= 0) {
+		if (player.getBalance() <= 2) {
 			System.out.println("You have no funds. Returning to main menu...");
 			return;
 		}
@@ -47,7 +47,7 @@ public class BlackjackGame {
 		
 		//Thiss is the main entry loop, it will loop until the player quits or player balance = 0
 		
-		while (keepPlaying && player.getBalance() > 0) {
+		while (keepPlaying && player.getBalance() >= 2) {
 			initializeRound(); // Calls the initializeRound method
 			bettingAmount = promptBet(input); // Ask player for bet amount.
 			System.out.println("\nYou've bet $" + bettingAmount + " for this round.\n");

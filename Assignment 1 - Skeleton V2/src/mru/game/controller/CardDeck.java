@@ -62,7 +62,7 @@ public class CardDeck {
 	}
 
 	public Card dealCard() {
-		return cards.remove(0);
+		return cards.remove(0); // Picking out card from ArrayList (0)
 	}
 	
 }

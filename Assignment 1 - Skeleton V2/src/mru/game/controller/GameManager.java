@@ -8,6 +8,13 @@ import mru.game.view.AppMenu;
 
 import java.io.*;
 
+/**
+ * This class Manages the loading and saving of the data as well as calls to run to start the game
+ * @author Haseeb
+ * @author Lorenzo
+ * @author Alex
+ */
+
 public class GameManager {
 	
 	/* In this class toy'll need these methods:
@@ -18,11 +25,35 @@ public class GameManager {
 	 * A method to find the top players
 	 * Depending on your designing technique you may need and you can add more methods here 
 	 */
-	ArrayList<Player> playersArrayList;
-	AppMenu menu;
-	final String PLAYER_DATABASE_FILE = "res/CasinoInfo.txt";
 	
-	//Constructor
+	
+	
+	/**
+	 * This ArrayList Holds a list of Player Objects saved in the database
+	 */
+	private ArrayList<Player> playersArrayList;
+	
+	private AppMenu menu;
+	
+	/**
+	 * This Final Variable holds the path for to the database
+	 */
+	private final String PLAYER_DATABASE_FILE = "res/CasinoInfo.txt";
+	
+	/**
+	 * This is the initial balance of NEW players that are not in the database
+	 */
+	private final int INITIAL_BAL = 100; 
+	
+	/**
+	 * This is the initial win of NEW players that are not in the database
+	 * new players should not have any wins in our database
+	 */
+	private final int INITIAL_WIN = 0;
+	
+	/**
+	 * This constructor initiates the AppMenu and the ArrayList and calls methods to load the saved data and start the game
+	 */
 	public GameManager() throws IOException{
 		menu = new AppMenu();
 		playersArrayList = new ArrayList<>();
@@ -33,6 +64,11 @@ public class GameManager {
 		
 	}
 
+	/**
+	 * This Method loads the file into the playerArrayList by reading and splitting the PLAYER_DATABASE_FILE using delimiter of ","
+	 * 
+	 * @throws IOException if there's an issue with reading the file
+	 */
 	private void loadFile() throws IOException {
 		File file = new File(PLAYER_DATABASE_FILE);
 		if (file.exists()) {  //If the File exists, READ and Initiate the WHILE LOOP
@@ -41,13 +77,10 @@ public class GameManager {
 			BufferedReader rawPlayerData = new BufferedReader(fileRead);
 			String currentLine= rawPlayerData.readLine();
 			
-			while(currentLine != null) {
-//				System.out.println(currentLine); //Temporary
+			while(currentLine != null) { // if the line is not empty continue the loop
 				String[] splittedLine = currentLine.split(",");
-				Player new_player= new Player(splittedLine[0], Integer.parseInt(splittedLine[1]), 0); //**I think something is wrong with this line had to put 0 or any number as the 3rd object for it to run - Haseeb**
-				//System.out.println(new_player.toString());// temporary to test if its in the player object
+				Player new_player= new Player(splittedLine[0],Integer.parseInt(splittedLine[1]),Integer.parseInt(splittedLine[2]));
 				playersArrayList.add(new_player); //Add new player into the Player arraylist so the new object gets saved and not lost
-				//secondArrayList.add(new-player(;
 				currentLine= rawPlayerData.readLine();
 			}
 			rawPlayerData.close();
@@ -56,11 +89,16 @@ public class GameManager {
 		
 	}
 	
+	/**
+	 * This Method Starts the game and calls for to prompt the main menu that loops until the user chooses to exit
+	 * 
+	 * @throws IOException if there's an issue with reading the file
+	 */
 	private void startGame() throws IOException {
 		
 		while(true) {
 			
-			String userInput = menu.showMainMenu(); //this shows menu and validates the input in the menu class
+			String userInput= menu.showMainMenu(); //this shows menu  and validates  the input in the menu class
 			
 			switch (userInput) {
 				case "p":
@@ -75,17 +113,18 @@ public class GameManager {
 					break;
 				case "e":
 					save();
-					System.out.println("Saving...");
-					System.out.println("Done! Please visit us again!");
-
-					return; //exit and stops the code
+					return; //exits out of the loop and stops the code
 				
 				default:
 					menu.showInputErrorMessage();
 			}
 		}
 	}
-		
+	
+	/**
+	 * This Method calls a sub menu that allows the user to choose a way to search for a player
+	 * 
+	 */
 	private void searchPlayerMenu() {
 		String userInputSearch = menu.showSearchMenu(); //this shows search menu  and validates  the input in the menu class
 		switch (userInputSearch) {
@@ -104,52 +143,75 @@ public class GameManager {
 				menu.showInputErrorMessage();
 		
 		}
-
-
-
-
-
 	}
+	
+	/**
+	 * This method calls to validate a searched name, if the name is valid then a method is called that displays the player information, 
+	 * and if the name is invalid it calls a method that displays an invalid message
+	 * 
+	 */
 	private void searchForName() {
-		Player playerInfo = searchNameValidation(menu.showAskName()); // showAskName() prompts a menu and asks the user to enter a name, then returns user input string data
+		/*
+		 * showAskName() prompts a menu and asks the user to enter a name, then returns user input string data
+		 * to be validated if it exists
+		 */
+		Player playerInfo = searchNameValidation(menu.showAskName()); 
 		
-		if (playerInfo != null) {
+		if (playerInfo != null) { // if the player exists then show that players information
 			menu.showPlayerInfo(playerInfo);
 		}
-		else {
+		else { //if the player does not exist show a message to indicate that they dont exists
 			menu.showPlayerNotFound();
 		}
 	}
 	
-	
-	
-	
+	/**
+	 * This method calls to asks the name of the current player, if the current player is a returning player then it will call a method that greets 
+	 * the player. If the current player is a new player, then it will create a new player object and add it into the playerArrayList
+	 * 
+	 * @return returns the new or returning player object
+	 */
 	private Player askUserName() {
-		String name = menu.showAskUserName();
+		//logic for verfying old or new user goes here
+		String userString = menu.showAskUserName();
+		Player user = searchNameValidation(userString); 
 		
-		Player foundPlayer = searchNameValidation(name);
+		/*
+		 * After searching name,
+		 * If searchNameValidation() does return an existing player then return that existing player
+		 * If not create a new player and  add to array
+		 * then return that new player
+		 */
 		
-		if(foundPlayer != null) {
-			menu.showWelcomeNew(foundPlayer);
-			return foundPlayer;
+		if (user != null) { // if user exists greet back the user
+			menu.showWelcomeOldUser(user);
+			return user;
+		} else { //if user is new then create a new player object and add them to playerArrayList and greet them
+			Player newUser = createNewUser(userString);
+			playersArrayList.add(newUser);
+			menu.showWelcomeNewUser(newUser);
+			return newUser;
 		}
-		
-		Player newbie = new Player(name, 100, 0);
-			playersArrayList.add(newbie);
-		menu.showWelcomeOld(newbie);
-		return newbie;
 	}
 	
-
+	/**
+	 * This method creates a new Player object by initializing a new Player object with the initial balance and win value
+	 * 
+	 * @return returns the new player object
+	 * @param newPlayerName the Players name that was not found in the database
+	 */
 	private  Player createNewUser(String newPlayerName) {
-		// TODO Auto-generated method stub
-		int initialBal = 100;
-		int initialWin = 0;
-		return new Player(newPlayerName, initialBal, initialWin);
+		return new Player(newPlayerName,INITIAL_BAL, INITIAL_WIN);
 		
 		
 	}
 
+	/**
+	 * This method calls the........................................................
+	 * 
+	 * @return the player object after the game is played out
+	 * @param userName the current player
+	 */
 	private Player playGame(Player userName) {
 		// TODO logic for playing the game
 		//acccepst the player object
@@ -158,11 +220,14 @@ public class GameManager {
 		
 	}
 
-
+	/**
+	 * This method validate a players name by using a for loop to compare if the playerName is the same as any 
+	 * of the name in the playersArrayList
+	 * 
+	 * @return returns the Player object found, or if the player is not found in the ArrayList then returns null
+	 * @param playerName any player name as long as its a string
+	 */
 	private Player searchNameValidation(String playerName) {
-		// TODO logic to search for name
-		// menu.showAskName(); temporary
-		
 		/*
 		 * when this method is given a name,
 		 * compare the name with each player name in the ArrayList,
@@ -173,36 +238,54 @@ public class GameManager {
 		 */
 		
 		for (Player p: playersArrayList) {
-			if (playerName.equals(p.getName())) {
+			if (playerName.toLowerCase().equals(p.getName().toLowerCase())) {
 				return p;
 			}
-	
 		}
 		return null;
 	}
 
+	/**
+	 * This method sorts the player with the most number of wins in descending order and calls another method to display it
+	 * If there are no players to compare to, then call a method to display an indication of this
+	 * 
+	 */
 	private void searchTop() {
-		// TODO logic to search for the top
+		// logic to search for the top
 		
-		//System.out.println(playersArrayList.get(2).getNumOfWins());
+		ArrayList<Player> topPlayersArrayList = new ArrayList<Player>(playersArrayList); // create a new arraylist containing the top players from descending order
+		
+		
 		//SOURCE: https://www.w3schools.com/java/java_advanced_sorting.asp
-		playersArrayList.sort(null);
+		topPlayersArrayList.sort(null); //sort using the combination of .sort and compareTo in the player class
 		
-		System.out.println("temporary\n" +playersArrayList); // temporary
-		menu.showSearchTop();
+		if (topPlayersArrayList.isEmpty()) { //Takes care of a scenario when the database is empty
+			menu.showNoTopPlayers();
+		}
+		else {
+			
+		menu.showSearchTop(topPlayersArrayList);
+		menu.enterToContinue();
+		}
 
-		
 		
 	}
 	
+	/**
+	 * This method saves the data of the players after playing the game into the database text file
+	 * and formats it as "name,balance,numberOfWins"
+	 * 
+	 * @throws IOException if there's an issue with writing to the PLAYER_DATABASE_FILE
+	 */
 	private void save() throws IOException {
 		// TODO Auto-generated method stub
 		FileWriter filewriter = new FileWriter(PLAYER_DATABASE_FILE);
 		PrintWriter outputFile = new PrintWriter(filewriter);
 		
+		menu.showSaveProgress();
 		
 		for (Player p: playersArrayList) { // puts all the players in the list into the outputfile/database
-			outputFile.println(p.getName() + "," + p.getNumOfWins());
+			outputFile.println(p.getName() + "," + p.getBalance() + "," + p.getNumOfWins());
 		}
 		outputFile.close();
 	}
