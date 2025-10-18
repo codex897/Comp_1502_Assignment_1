@@ -1,4 +1,17 @@
-	private int calculateHandValue(List<Card> list) {
+/**
+	 * This method calculates the total value of a hand
+	 * 
+	 * first loop: adds up the total of all the cards in the hand
+	 * and keeps track of the aces (does not add it yet)
+	 * Second loop: if there are aces, and if the total value of the hand is more
+	 * than 21 if the ace is worth 11, then the ace will be worth 1
+	 * if its less than 21 if the ace is worth 11 then the ace will be worth 11
+	 * 
+	 * @param list this is the list that contains the several cards the dealer or the player has
+	 * @return Returns the total value of the hand as an int
+	 */
+
+private int calculateHandValue(List<Card> list) {
 		int handValueTotal = 0;
 		int totalAce = 0;
 
