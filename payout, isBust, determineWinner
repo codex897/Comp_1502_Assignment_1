@@ -1,0 +1,85 @@
+private boolean isBlackJack(List<Card> hand) { //Checks for a natural blackjack(Ace card + 10)
+		return false;
+	}
+	
+	//Outcome
+	
+	private boolean isBust(int handVal) { // handval is calculated from using calculateHandValue method
+
+		if(handVal > 21) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	private String determineWinner() {
+		boolean playerHasBlackJack = isBlackJack(player.getHand());
+		boolean DealerHasBlackJack = isBlackJack(dealer.getHand());
+		int playerHandVal= calculateHandValue(player.getHand());
+		int dealerHandVal= calculateHandValue(dealer.getHand());
+		boolean playerBust= isBust(playerHandVal);
+		boolean dealerBust= isBust(dealerHandVal);
+				
+		
+		//if the word returned has insta then the game ends
+		
+		if(playerBust) { //if playerBust  then player instantly lose
+			return "instaLoss";
+		}
+		else if(dealerBust) { //if dealerBust then the player instantly wins
+			return "instaWin";
+		}
+		else if(playerHasBlackJack && DealerHasBlackJack) { // if both have a blackjack game instantly ends in a tie
+			return "instaTie";															  
+		}
+		else if (playerHasBlackJack) { //if only the player has the blackjack then player wins a special amount (1.5x) and player instantly wins
+			return "instaBlackjack";
+		}
+		else if(DealerHasBlackJack) { // if only the dealer has a blackjack then player instantly loses
+			return "instaLoss";											 					
+		}
+		else if (playerHandVal == dealerHandVal){	//if playerhandval is the same as daalerhandval then set the results to "regularTie"
+			return "regularTie";						//but does not end the game
+		}
+		else if (playerHandVal < dealerHandVal ) { // if the playerhandval is less than dealer handval then set results to "regularLoss"
+			return "regularLoss";
+		}
+		else if (playerHandVal > dealerHandVal) { // if the playerHandval is more than dealeHandVal then set results to "regularWin"
+			return "regularWin";
+		} else {
+			return null;
+		}
+
+	}
+	
+	private void payout(String result) {
+		double blackJackPayoutMultiplier= 1.5;
+		
+		switch (result) {
+		case "instaBlackjack": 
+			player.setBalance(player.getBalance() + (blackJackPayoutMultiplier * bettingAmount));
+			break;
+			
+		
+		case "regularWin":
+		case "instaWin":
+			player.setBalance(player.getBalance() +  bettingAmount);
+			break;
+		
+			
+		case "instaTie":
+		case "regularTie":
+			//keep there current balance they win nor lose any
+			break;
+			
+		case "instaLoss": 
+		case "regularLoss": 
+			player.setBalance(player.getBalance() -  bettingAmount);
+			break;
+			
+		
+		default:
+			
+		}
+	}
