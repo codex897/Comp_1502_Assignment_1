@@ -1,0 +1,27 @@
+private void payout(String result) {
+		double blackJackPayoutMultiplier= 1.5;
+		
+		switch (result) {
+		case "blackjack": 
+			player.setBalance(player.getBalance() + (blackJackPayoutMultiplier * bettingAmount));
+			break;
+			
+		
+		case "regularWin": 
+			player.setBalance(player.getBalance() +  bettingAmount);
+			break;
+		
+			
+		case "tie": 
+			//keep there current balance they win nor lose any
+			break;
+			
+		case "loss": 
+			player.setBalance(player.getBalance() -  bettingAmount);
+			break;
+			
+		
+		default:
+			
+		}
+	}
