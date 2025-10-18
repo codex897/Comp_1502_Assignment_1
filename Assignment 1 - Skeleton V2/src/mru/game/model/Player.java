@@ -27,12 +27,12 @@ public class Player implements Comparable<Player> {
 	/**
 	 * This field is the amount of money the player has
 	 */
-	private int balance;
+	private double balance;
 	
 	/**
 	 * This List holds the card object for the current player
 	 */
-	private List<Card> hand;
+	private List<Card> hand; //the players hand
 	
 	/**
 	 * This Constructor initiates the ArrayList and constructs the player with the name balance and number of wins
@@ -42,7 +42,7 @@ public class Player implements Comparable<Player> {
 	 * @param balance The current Balance of the player
 	 * @param numOfWins The number of wins the player has
 	 */
-	public Player(String name, int balance, int numOfWins) {
+	public Player(String name, double balance, int numOfWins) {
 		this.name = name;
 		this.balance = balance;
 		this.numOfWins = numOfWins;
@@ -71,9 +71,9 @@ public class Player implements Comparable<Player> {
 	/**
 	 * returns the balance of the player
 	 * 
-	 * @return the balance that the player has as an int
+	 * @return the balance that the player has as an double
 	 */
-	public int getBalance() {
+	public double getBalance() {
 		return balance;
 	}
 	
@@ -82,7 +82,7 @@ public class Player implements Comparable<Player> {
 	 * 
 	 * @param balance the new amount for the players balance
 	 */
-	public void setBalance(int balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 	
@@ -111,7 +111,7 @@ public class Player implements Comparable<Player> {
 	 */
 	@Override
 	public String toString() {
-		return "Name: " + name + "BALANCE" + balance + "Number of Wins:" + numOfWins;
+		return "Name: " + name + ", BALANCE: " + balance + ", Number of Wins: " + numOfWins;
 	}
 	
 	/**

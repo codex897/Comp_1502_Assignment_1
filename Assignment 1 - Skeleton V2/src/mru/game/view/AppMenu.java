@@ -118,7 +118,7 @@ public class AppMenu {
 	 */
 	public void showWelcomeOldUser(Player user) {
 		String name = user.getName().toUpperCase();
-		int bal = user.getBalance();
+		double bal = user.getBalance();
 		
 		System.out.println(X);
 		System.out.println("**\t\tWelcome back " + name + "\t\tYour Balance is $: " + bal + "\t**");
@@ -133,7 +133,7 @@ public class AppMenu {
 	public void showWelcomeNewUser(Player user) {
 		//  Shows a message if the person playing this game does not exist in the file
 		String name = user.getName().toUpperCase();
-		int bal = user.getBalance();
+		double bal = user.getBalance();
 		
 		System.out.println(X);
 		System.out.println("**\t\tWelcome " + name + "\t\tYour initial Balance is $: " + bal + "\t**");

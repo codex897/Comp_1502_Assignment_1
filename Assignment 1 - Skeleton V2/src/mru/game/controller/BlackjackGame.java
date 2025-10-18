@@ -22,37 +22,41 @@ public class BlackjackGame {
 	private static final int MIN_BET = 2;
 	private static final boolean True = false;
 	
+	Scanner input ;
 	
-	
-	public BlackjackGame(Player player, int bettingAmount) { //Constructor
+	public BlackjackGame(Player player) { //Constructor
+		input = new Scanner(System.in);
 		this.bettingAmount = bettingAmount;
 		this.player = player;
 		this.dealer = new Dealer();
 		this.deck = new CardDeck();
 		this.deck.shuffleDeck();
+		
+		startGame();
 	}
 	
 	// Game Flow
 	
 	public void startGame(){
 		// Checks player balance for eligibility before starting any rounds.
-		
-		if (player.getBalance() <= 0) {
-			System.out.println("You have no funds. Returning to main menu...");
-			return;
-		}
+		checkPlayerBalance();
 		
 		boolean keepPlaying = true;
+		
 		Scanner input = new Scanner(System.in);
 		
 		//Thiss is the main entry loop, it will loop until the player quits or player balance = 0
 		
-		while (keepPlaying && player.getBalance() > 0) {
-			initializeRound(); // Calls the initializeRound method
+		while (keepPlaying && player.getBalance() >= MIN_BET) { //while the player has at least the minimum betting requirement
+			initializeRound(); // Calls the initializeRound method (resets,clears, re shuffles)
 			bettingAmount = promptBet(input); // Ask player for bet amount.
-			System.out.println("\nYou've bet $" + bettingAmount + " for this round.\n");
-			
+			dealInitialCards();
+	
+			playerTurn(input);
 			//The rest of the methods are needed still, like dealingintialcards, playerturn, delearturn, etc.
+
+			
+			
 			
 			keepPlaying = askToKeepGoing(input);
 		}
@@ -102,7 +106,7 @@ public class BlackjackGame {
 	private int promptBet(Scanner input) { 
 		// Method: Ask player for bet amount, and makes sure there's enough balance, 
 		// and bet amount >= 2, and makes sure it follows game rules
-		int maxBet = player.getBalance();
+		double maxBet = player.getBalance();
 		int bet = 0;
 		boolean valid = false;
 		
@@ -139,7 +143,7 @@ public class BlackjackGame {
 	}
 	
 	private void checkPlayerBalance() { //This method will make sure the player never plays with $0.
-		int balance = player.getBalance();
+		double balance = player.getBalance();
 		
 		if(balance >= 2) {
 			System.out.println("You have enough to play $" + balance + "!");
@@ -185,33 +189,149 @@ public class BlackjackGame {
 				System.out.println("Invalid Choice. Please enter 1 or 2");
 			}
 		}
+		
+		while(keepPlaying) {
+			System.out.println("\nYour Hand: " + player.getHand()); // temporary
+			int handValue = calculateHandValue(player.getHand());
+			
+			if (isBust(handValue)) {
+				System.out.println("You Busted!");
+			}
+			else if(isBlackJack(null)) {
+				System.out.println("You Have BLACKJACK!");
+				
+			}
+		}
 	}
 	
 	private void dealerTurn() { //hit <= 16, stand >= 17
 		
 	}
 	
+	
+	/**
+	 * This method calculates the total value of a hand
+	 * 
+	 * first loop: adds up the total of all the cards in the hand
+	 * and keeps track of the aces (does not add it yet)
+	 * Second loop: if there are aces, and if the total value of the hand is more
+	 * than 21 if the ace is worth 11, then the ace will be worth 1
+	 * if its less than 21 if the ace is worth 11 then the ace will be worth 11
+	 * 
+	 * @param list this is the list that contains the several cards the dealer or the player has
+	 * @return Returns the total value of the hand as an int
+	 */
 	private int calculateHandValue(List<Card> list) {
-		return bettingAmount;
+		int handValueTotal = 0;
+		int totalAce = 0;
+
+		
+		for (Card card: list) {				//read the cards one by one and analyze what rank they are
+			if(card.getRank() == 1) { 		//if the card is an ace then keep track how much aces by incrementing totalAce
+				totalAce ++; 	
+			}
+			else if(card.getRank() > 10) {  //Any rank that is more than 10 is Jack, Queen, King, all worth 10
+				handValueTotal += 10;
+			}
+			else {
+				handValueTotal += card.getRank();
+			}
+		}
+		
+		for (int i = 0; i < totalAce; i++) { 
+		
+			if (handValueTotal + 11 > 21) { //if the handValueTotal plus an ace as 11 would be more than 21 
+				handValueTotal += 1; 		//Then only add 1 to handValueTotal
+			}
+			else {
+				handValueTotal += 11;		//else add 11 to handvalueTotal
+			}
+		}
+		
+		return handValueTotal;
 		
 	}
 	
-	private void isBust(int hand) {
-		
-	}
+
 	
-	private void isBlackJack(int hand) { //Checks for a natural blackjack(Ace card + 10)
-		
+	private boolean isBlackJack(List<Card> handList) { //Checks for a natural blackjack(Ace card + 10)
+		int ace = 1;
+		if (handList.size == 2 ) {
+			if (handList.containsAll(handList))
+					
+				
+		}
 	}
 	
 	//Outcome
 	
-	private void determineWinner() {
-		
+	/**
+	 * This method checks if the total hand is above 21
+	 * 
+	 * If the total hand is above 21, then that is considered a bust
+	 * 
+	 * @param handVal the total value of a hand (calculated using .calculateHandValue() method
+	 * @return true if total hand is above 21, False if less
+	 */
+	private boolean isBust(int handVal) { // handval is calculated from using calculateHandValue method
+
+		if(handVal > 21) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
-	private void payout(int result) {
+	/**
+	 * This method determines the results of the game when it ends
+	 * 
+	 * @return if the match was a tie loss or a regular win
+	 */
+	private String determineWinner() {
+		int playerHandVal= calculateHandValue(player.getHand());
+		int dealerHandVal= calculateHandValue(dealer.getHand());
+		String results = "";
+
+		if (playerHandVal == dealerHandVal){	//if playerhandval is the same as daalerhandval then set the results to "tie"
+			results = "tie";						//but does not end the game
+		}
+		else if (playerHandVal < dealerHandVal ) { // if the playerhandval is less than dealer handval then set results to "loss"
+			results = "loss";
+		}
+		else if (playerHandVal > dealerHandVal) { // if the playerHandval is more than dealeHandVal then set results to "regularWin"
+			results = "regularWin";
+		} 
 		
+		return  results;
+
+	}
+	
+	/**
+	 * This method calculates and sets the final balance of the player
+	 * @param result the result of the match, whether its a blackjack for the player, a tie, or just a regular win
+	 */
+	private void payout(String result) {
+		double blackJackPayoutMultiplier= 1.5;
+		
+		switch (result) {
+		case "blackjack": 
+			player.setBalance(player.getBalance() + (blackJackPayoutMultiplier * bettingAmount));
+			break;
+			
+		
+		case "regularWin":
+			player.setBalance(player.getBalance() +  bettingAmount);
+			break;
+		
+		case "tie":
+			//keep there current balance they win nor lose any
+			break;
+
+		case "loss": 
+			player.setBalance(player.getBalance() -  bettingAmount);
+			break;	
+		}
 	}
 	
 	

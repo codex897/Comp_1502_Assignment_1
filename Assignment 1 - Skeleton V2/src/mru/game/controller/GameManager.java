@@ -79,7 +79,7 @@ public class GameManager {
 			
 			while(currentLine != null) { // if the line is not empty continue the loop
 				String[] splittedLine = currentLine.split(",");
-				Player new_player= new Player(splittedLine[0],Integer.parseInt(splittedLine[1]),Integer.parseInt(splittedLine[2]));
+				Player new_player= new Player(splittedLine[0],Double.parseDouble(splittedLine[1]),Integer.parseInt(splittedLine[2]));
 				playersArrayList.add(new_player); //Add new player into the Player arraylist so the new object gets saved and not lost
 				currentLine= rawPlayerData.readLine();
 			}
@@ -215,6 +215,7 @@ public class GameManager {
 	private Player playGame(Player userName) {
 		// TODO logic for playing the game
 		//acccepst the player object
+		BlackjackGame blackjack = new BlackjackGame(userName);
 		return null;
 		
 		
@@ -238,7 +239,7 @@ public class GameManager {
 		 */
 		
 		for (Player p: playersArrayList) {
-			if (playerName.toLowerCase().equals(p.getName().toLowerCase())) {
+			if (playerName.toLowerCase().equals(p.getName().toLowerCase())) { // compares player name to the playerArraylist names all inn lower case
 				return p;
 			}
 		}
