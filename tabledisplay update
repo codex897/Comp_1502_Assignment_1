@@ -1,0 +1,32 @@
+	private void tableDisplay(List<Card> playerHandList, List<Card> dealerHandList) { 
+		String playerCard = "";		
+		String dealerCard = "";	
+		int maxHandSize = dealerHandList.size();		
+		
+		gameMenu.showSearchTableLabel();				//first call to display the labels
+
+		if (playerHandList.size() > dealerHandList.size()){				//if the playershand more than dealerHandList.size()
+			maxHandSize = playerHandList.size();		//set the maxHandSize to the one with the most amount of cards
+		}
+		
+		for(int i = 0; i < maxHandSize; i++) {		//the loop makes a row for the table and makes as much as the maxHandSize
+			
+			if (playerHandList.size() <= i) {		//check if the row being created is more than the the size of the players hand
+				playerCard = "";						//if so, then display a blank in the row for the player collumn
+			}
+			else {					
+				playerCard = playerHandList.get(i).toString();		//else, turn the Card object to a string
+			}
+			
+			if (dealerHandList.size() <= i) {		//check if the row being created is more than the the size of the players hand
+				dealerCard = "";						//if so, then display a blank in the row for the player collumn
+			}
+			else {					
+				dealerCard = dealerHandList.get(i).toString();		//else, turn the Card object to a string
+			}
+			gameMenu.showTableCard(playerCard, dealerCard);			
+		}
+
+///////////////// REPLACE this too inside the player turn around line 182
+
+tableDisplay(player.getHand(), dealer.getHand());  //calls to display the cards on screen
