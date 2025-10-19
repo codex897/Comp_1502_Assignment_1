@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import mru.game.model.Player;
-//Testing Commit
+
+import mru.game.view.AppMenu;
+import mru.game.view.gameplayMenu;
+
 public class BlackjackGame {
 
 	/**
@@ -23,14 +26,20 @@ public class BlackjackGame {
 	private static final boolean True = false;
 	
 	Scanner input ;
+	private AppMenu menu;
+	private gameplayMenu gameMenu;
 	
 	public BlackjackGame(Player player) { //Constructor
 		input = new Scanner(System.in);
+		menu = new AppMenu();
+		gameMenu= new gameplayMenu();
+		
 		this.bettingAmount = bettingAmount;
 		this.player = player;
 		this.dealer = new Dealer();
 		this.deck = new CardDeck();
 		this.deck.shuffleDeck();
+		
 		
 		startGame();
 	}
@@ -99,6 +108,11 @@ public class BlackjackGame {
 		//Second Dealer Card
 		dealer.addCardToHand(deck.dealCard());
 		
+		//for testing
+//		player.addCardToHand(new Card(2, "heart"));
+//		player.addCardToHand(new Card(10, "heart"));
+//		player.addCardToHand(new Card(12, "heart"));
+		
 	}
 	
 	//Betting / Checking player balance
@@ -159,51 +173,80 @@ public class BlackjackGame {
 	
 	private void playerTurn(Scanner input) {
 		boolean keepPlaying = true;
-		
+
 		while(keepPlaying) {
-			System.out.println("\nYour Hand: " + player.getHand());
+			System.out.println("\nYour Hand: " + player.getHand()); // temporary display
 			int handValue = calculateHandValue(player.getHand());
-			System.out.println("Your Total Hand Value: " + handValue);
+			System.out.println("Your Total Hand Value: " + handValue); // temporary display
 			
-			//Conditions set for if player bust
-			if (handValue > 21) {
-				System.out.println("You Busted!");
-				break; // Stops loop
+			tableDisplay(player.getHand());  //calls to display the cards on screen
+			
+			if (isBust(player.getHand())) { 		//check if player is bust
+				System.out.println("You Busted!"); // temporary display
+				break;
 			}
 			
-			System.out.println("Would you like to \n(1) Hit \n(2) Stand ");
-			int choice = 0;
-			
-			choice = Integer.parseInt(input.nextLine());
-			
-			if (choice == 1) {
-				player.addCardToHand(deck.dealCard());
-				System.out.println("You drew a new card.");
+			if(isBlackJack(player.getHand())) {  //check if player is bust
+				System.out.println("You Have BLACKJACK!"); // temporary display
+				break; 
 			}
-			
-			else if (choice == 2) {
-				System.out.println("You chose to stand.");
-				keepPlaying = false;
-			}
-			else {
-				System.out.println("Invalid Choice. Please enter 1 or 2");
-			}
-		}
-		
-		while(keepPlaying) {
-			System.out.println("\nYour Hand: " + player.getHand()); // temporary
-			int handValue = calculateHandValue(player.getHand());
-			
-			if (isBust(handValue)) {
-				System.out.println("You Busted!");
-			}
-			else if(isBlackJack(null)) {
-				System.out.println("You Have BLACKJACK!");
-				
-			}
+	
+			keepPlaying = playerHitStandChoice(); // calls to prompt hit or stand choice and returns falls if they choose to stand
 		}
 	}
 	
+	private void tableDisplay(List<Card> playerHandList) { //this is just temporary, it should also accept dealerHandList
+		String playerCard = "";						
+		int maxHandSize = 4;							//temporary its 4 but should be dealerHandList.size()
+		
+		gameMenu.showSearchTableLabel();				//first call to display the labels
+
+		if (playerHandList.size() > 4){				//if the playershand more than dealerHandList.size()
+			maxHandSize = playerHandList.size();		//set the maxHandSize to the one with the most amount of cards
+		}
+		
+		for(int i = 0; i < maxHandSize; i++) {		//the loop makes a row for the table and makes as much as the maxHandSize
+			
+			if (playerHandList.size() <= i) {		//check if the row being created is more than the the size of the players hand
+				playerCard = "";						//if so, then display a blank in the row for the player collumn
+			}
+			else {					
+				playerCard = playerHandList.get(i).toString();		//else, turn the Card object to a string
+			}
+			gameMenu.showTableCard(playerCard, "");			//temporary, the "" should be dealerCard
+		}
+//		menu.showPlayerData(name, n);
+			
+	
+		
+	}
+
+	private boolean playerHitStandChoice() {
+		boolean keepPlaying = true; 
+		while(true) {
+			System.out.println("Would you like to \n(1) Hit \n(2) Stand ");  // temporary display
+			String choice = input.nextLine();
+			
+			switch (choice) {
+				case "1":
+					player.addCardToHand(deck.dealCard());
+					System.out.println("You drew a new card.");  // temporary display
+					break;
+				
+				case "2":
+					System.out.println("You chose to stand."); // temporary display
+					keepPlaying = false;
+					break;
+				
+				default :
+					menu.showInputErrorMessage();
+			}
+			return keepPlaying;
+		}
+
+		
+	}
+
 	private void dealerTurn() { //hit <= 16, stand >= 17
 		
 	}
@@ -255,12 +298,10 @@ public class BlackjackGame {
 
 	
 	private boolean isBlackJack(List<Card> handList) { //Checks for a natural blackjack(Ace card + 10)
-		int ace = 1;
-		if (handList.size == 2 ) {
-			if (handList.containsAll(handList))
-					
-				
-		}
+		int handValue = calculateHandValue(handList);
+		
+		return handList.size() == 2 && handValue == 21;
+		
 	}
 	
 	//Outcome
@@ -273,14 +314,10 @@ public class BlackjackGame {
 	 * @param handVal the total value of a hand (calculated using .calculateHandValue() method
 	 * @return true if total hand is above 21, False if less
 	 */
-	private boolean isBust(int handVal) { // handval is calculated from using calculateHandValue method
+	private boolean isBust(List<Card> handList) { // handval is calculated from using calculateHandValue method
+		int handValue = calculateHandValue(player.getHand());
+		return handValue > 21;
 
-		if(handVal > 21) {
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 	
 	/**

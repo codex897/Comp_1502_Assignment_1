@@ -6,6 +6,7 @@ import mru.game.model.Player;
 
 import mru.game.view.AppMenu;
 
+
 import java.io.*;
 
 /**
@@ -158,7 +159,9 @@ public class GameManager {
 		Player playerInfo = searchNameValidation(menu.showAskName()); 
 		
 		if (playerInfo != null) { // if the player exists then show that players information
-			menu.showPlayerInfo(playerInfo);
+			menu.showPlayerInfoLabel();
+			menu.showPlayerData(playerInfo.getName(), playerInfo.getNumOfWins());
+			menu.enterToContinue();
 		}
 		else { //if the player does not exist show a message to indicate that they dont exists
 			menu.showPlayerNotFound();
@@ -265,11 +268,22 @@ public class GameManager {
 		}
 		else {
 			
-		menu.showSearchTop(topPlayersArrayList);
-		menu.enterToContinue();
+			menu.showSearchTopLabel();				//first call to display the labels
+			
+			int i = 0;
+			for (Player p: topPlayersArrayList) {  // each loop will display one player from the topPlayerArrayList
+				String name = p.getName();
+				int wins = p.getNumOfWins();
+				menu.showPlayerData(name, wins);
+				
+				i++;								//each loop increments i by one until it hits 5 then the loop breaks
+				if (i == 5) {
+					break;
+				}
+			}
+	
+			menu.enterToContinue();
 		}
-
-		
 	}
 	
 	/**

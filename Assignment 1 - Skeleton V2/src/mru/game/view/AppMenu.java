@@ -76,11 +76,21 @@ public class AppMenu {
 	 * 
 	 * @param playerList all the player sorted in the amount of wins in descending order 
 	 */
-	public void showSearchTop(ArrayList<Player> playerList) {
-		System.out.println("top player is");
-		System.out.println(playerList);
+	public void showSearchTopLabel() {
+		System.out.println("");
+		System.out.println("            - TOP PLAYERS -            ");
+		System.out.println("+==================+==================+");
+		System.out.println("|NAMES             |#WINS             |");
+		System.out.println("+==================+==================+");
+		
 	
 		}
+	public void showPlayerData(String name, int wins) {
+		System.out.println(String.format("|%-18s|%-18s|", name, wins));
+		System.out.println("+------------------+------------------+");
+		
+	}
+
 	
 	/**
 	 * This method displays an instruction on how to continue and prompts user for input
@@ -88,7 +98,8 @@ public class AppMenu {
 	 * @return an empty string
 	 */
 	public String enterToContinue(){
-		System.out.println("Press " + "enter " + "to continue...");
+		System.out.println("");
+		System.out.println("Press " + "\"ENTER\" " + "to continue...");
 		return input.nextLine().trim().toLowerCase();	
 	}
 
@@ -145,9 +156,13 @@ public class AppMenu {
 	 * 
 	 * @param playerInfo the player object for the player that was searched
 	 */
-	public void showPlayerInfo(Player playerInfo) {
+	public void showPlayerInfoLabel() {
 		// when the user searches for a player show there stats
-		System.out.println("player found");
+		System.out.println("");
+		System.out.println("            - PLAYER INFO -            ");
+		System.out.println("+==================+==================+");
+		System.out.println("|NAMES             |#WINS             |");
+		System.out.println("+==================+==================+");
 	}
 
 	/**
@@ -175,116 +190,9 @@ public class AppMenu {
 	public void showNoTopPlayers() {
 		System.out.println("There are no players yet to add to the leaderboards");
 	}
-
-//////////////////////////////////////////////////////
-
-
-
+	
+	
+	
+	
 }
-//
-//package mru.game.view;
-//
-//import java.util.Scanner;
-//
-//import mru.game.model.Player;
-//
-//public class AppMenu {
-//		
-//	/**
-//	 * This class will be used to show the menus and sub menus to the user
-//	 * It also prompts the user for the inputs and validates them 
-//	 */
-//	
-//	private static final String X = "***************************************************************************";
-//	
-//	Scanner input;
-//	public AppMenu(){
-//		input = new Scanner(System.in);
-//	}
-//		
-//		
-//	public String showMainMenu() {
-//		System.out.print("Select one of these options:\n");
-//		System.out.println("\n\t(P) Play Game");
-//		System.out.println("\t(S) Search");
-//		System.out.println("\t(E) Exit\n");
-//		System.out.print("Enter a choice: ");
-//		
-//		return input.nextLine().trim().toLowerCase();
-//
-//	}
-//	
-//	public String showSearchMenu() {
-//		System.out.print("Select one of these options:\n");
-//		System.out.println("\n\t(T) Top Player");
-//		System.out.println("\t(N) Looking for a Name");
-//		System.out.println("\t(B) Back to Main Menu\n");
-//		System.out.print("Enter a choice: ");
-//
-//		return input.nextLine().trim().toLowerCase();
-//
-//	}
-//
-//	public String showAskName() {
-//		// TODO Auto-generated method stub
-//		System.out.println("Enter a name here:");
-//		System.out.println("Press enter to go back to Main Menu");
-//		return input.nextLine().trim().toLowerCase();	
-//		}
-//
-//
-//	public String showSearchTop() {
-//		System.out.println("top player is");
-//		System.out.println("Press " + "enter " + "to continue...");
-//		return input.nextLine().trim().toLowerCase();		
-//		}
-//
-//
-//	public void showInputErrorMessage() {
-//		System.out.println("Invalid Input, Try again");
-//		
-//	}
-//
-////////////////////////////////////////////////////////
-//	public String showAskUserName() {
-//		// TODO Auto-generated method stub
-//		System.out.println("What is your name: ");
-//		return input.nextLine().trim().toLowerCase();	}
-//
-//
-//	public void showWelcomeOld(Player user) {
-//		// TODO Shows a message if the person playing this game exists
-//		String name = user.getName().toUpperCase();
-//		int bal = user.getBalance();
-//		
-//		System.out.println(X);
-//		System.out.println("**\t\tWelcome back " + name + "\t\tYour Balance is $: " + bal + "\t**");
-//		System.out.println(X);
-//	}
-//
-//
-//	public void showWelcomeNew(Player user) {
-//		// TODO  Shows a message if the person playing this game does not exist in the file
-//		String name = user.getName().toUpperCase();
-//		int bal = user.getBalance();
-//		
-//		System.out.println(X);
-//		System.out.println("**\t\tWelcome " + name + "\t\tYour initial Balance is $: " + bal + "\t**");
-//		System.out.println(X);
-//	}
-//
-//
-//	public void showPlayerInfo(Player playerInfo) {
-//		// TODO when the user searches for a player show there stats
-//		System.out.println("player found");
-//	}
-//
-//
-//	public void showPlayerNotFound() {
-//		// TODO When a player searches for a player and the player does not exists
-//		System.out.println("player not found");
-//		
-//	}
-////////////////////////////////////////////////////////
-//
-//}
+

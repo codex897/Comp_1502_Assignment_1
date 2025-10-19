@@ -1,4 +1,4 @@
-chicken,100.0,0
+chicken,100.3,3
 boy,100.0,0
 doom_slayer,0.0,0
 celery,0.0,0
@@ -12,3 +12,5 @@ LebronJAMES,999.0,99999
 bill,100.0,0
 ben,0.0,0
 Lebron,100.0,0
+fd,100.0,0
+SpiDerX,100.0,0
