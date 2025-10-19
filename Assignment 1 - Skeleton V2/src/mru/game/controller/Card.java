@@ -77,5 +77,31 @@ public class Card {
 		
 		return name + suit;
 	}
+	
+	/**
+	 * Return the numerical value of card for it to work in calculations in Blackjack.
+	 * 
+	 * 
+	 * Number Cards: (2-10) keep their face value.
+	 * Face Cards: (J, Q ,K) are worth 10 each.
+	 * Ace Card: Ace is counted as 1 by default, but can be counted as 11 using
+	 * the already made methods.
+	 * @return The base numerical value of the card (1-10)
+	 */
+
+	public int getValue() {
+		//The cards rank for example(Jack = 11) is stored in the
+		//instance variable already at the top of the class.
+		
+		//If the rank is greater than 10(J, Q, K), return 10.
+		if (rank > 10) {
+			return 10;
+		//If not, then return the rank as it's value.
+		// (Ace = 1, cards 2-10 keep their face value).
+		} else {
+			return rank;
+		}
+
+	}
 
 }

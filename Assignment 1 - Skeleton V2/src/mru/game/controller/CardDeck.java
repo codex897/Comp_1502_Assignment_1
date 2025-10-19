@@ -65,4 +65,19 @@ public class CardDeck {
 		return deck.remove(0);
 	}
 	
+	/*
+	 * Returns the number of cards remaining in the deck.
+	 * 
+	 * This method allows for other parts of the game to check
+	 * whether the deck is running low and needs to be reshuffled before
+	 * dealing more cards.
+	 * 
+	 * 
+	 * @return The total number of cards left in the deck.
+	 */
+
+	public int size() {
+		return deck.size();
+	}
+	
 }

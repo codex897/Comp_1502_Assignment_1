@@ -56,6 +56,45 @@ public class gameplayMenu {
 	}
 	
 	/**
+	 * this displays an invalid input indicator
+	 * 
+	 * @param minimumBet the minimum requirement that the player can bet
+	 */
+	public void showInvalidBet(int minimumBet) {
+		System.out.println("Your bet must be at least $" + minimumBet + ".");
+
+	}
+	
+	/**
+	 * this displays the players bet
+	 * 
+	 * @param playersBet the amount that the player chose to bet
+	 */
+	public void showPlayersBet(int playersBet) {
+		System.out.println("");
+		System.out.println("Your bet $" + playersBet + ". Good luck!");
+
+	}
+	
+	/**
+	 * this displays an invalid input indicator when user enters a bet that is more than the players balance
+	 * 
+	 * @param maxBet the maximum amount a player can bet, which is there account balance
+	 */
+	public void showInvalidBetBalance(double maxBet) {
+		System.out.println("You cannot bet more than your balance ($" + maxBet + ").");
+
+	}
+	
+	/**
+	 * this displays an invalid number indicator
+	 */
+	public void showPleaseEnterValidNum() {
+		System.out.println("Please enter a valid number.");
+
+	}
+	
+	/**
 	 * this displays a question if the player wants to hit or stand
 	 */
 	public void showAsHitStand() {
@@ -69,6 +108,15 @@ public class gameplayMenu {
 	public void showHitIndicator() {
 		System.out.println("");
 		System.out.println("You drew a new card");
+
+	}
+	
+	/**
+	 * This method shows a message when a player chooses to start a new round
+	 */
+	public void showNewRound() {
+		System.out.println("");
+		System.out.println("\n--- New Round ---");
 
 	}
 	
@@ -158,6 +206,67 @@ public class gameplayMenu {
 		System.out.println("Do you want to continue (y/n)?");
 	}
 	
+	/**
+	 * This method displays a message to indicate the player that they do not have enough balance in there account to play
+	 * 
+	 * @param balance the players balance amount
+	 */
+	public void showNotEnoughBal(double balance) {
+		System.out.println("");
+		System.out.println("You don't have enough to play $" + balance + ".");
+	}
+	
+	/**
+	 * This method displays a message to indicate the player that they do have enough balance in there account to play
+	 * 
+	 * @param balance the players balance amount
+	 */
+	public void showEnoughBal(double balance) {
+		System.out.println("");
+		System.out.println("You have enough to play $" + balance + "!");
+	}
+	
+	/**
+	 * This method displays a message to indicate that it is the dealers turn
+	 */
+	public void showDealerTurn() {
+		System.out.println("");
+		System.out.println("--- Dealer's Turn ---");
+	}
+	
+	/**
+	 * This method displays a the total hand the dealer has and indicates that they will hit
+	 * 
+	 * @param dealerTotal The total hand value of the dealer
+	 */
+	public void showDealerHit(int dealerTotal) {
+		System.out.println("");
+		System.out.println("Dealer has " + dealerTotal + " and hits....");
+	}
+	
+	/**
+	 * This method displays a message to indicate that the dealer stands
+	 * 
+	 * @param dealerTotal the total hand value that the dealer has
+	 */
+	public void showDealerStand(int dealerTotal) {
+		System.out.println("");
+		System.out.println("Dealer stands with total of: " + dealerTotal);
+	}
+	
+	/**
+	 * This method displays the new balance of the player after the game
+	 * 
+	 * @param playerBal  the balance of the player after the game
+	 */
+	public void showPlayerNewBalance(double playerBal) {
+		System.out.println("");
+	    System.out.println("-------------------------------");
+	    System.out.printf("Your new balance: $%.2f%n", playerBal);
+	    System.out.println("-------------------------------\n");
+	}
+	
+	
+	
 	
 }
-

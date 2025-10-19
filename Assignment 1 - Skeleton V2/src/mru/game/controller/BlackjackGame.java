@@ -22,10 +22,11 @@ public class BlackjackGame {
 	private int bettingAmount;
 	private CardDeck deck;
 	
+	final double BLACKJACK_MULTIPLIER= 1.5;
 	private static final int MIN_BET = 2;
-	private static final boolean True = false;
-	
-	Scanner input ;
+	String result;
+	boolean revealDealerCard;
+	Scanner input;
 	private AppMenu menu;
 	private gameplayMenu gameMenu;
 	
@@ -45,8 +46,8 @@ public class BlackjackGame {
 	}
 	
 	// Game Flow
-	
-	public void startGame(){
+
+	public void startGame(){ // ************* THIS IS NOT DONE STILL NEED TO ADD THE REST OF THE METHODS IN ORDER, THEN THE GAME WILL RUN AND UPDATE CORRECTLY **************
 		// Checks player balance for eligibility before starting any rounds.
 		checkPlayerBalance();
 		
@@ -58,14 +59,13 @@ public class BlackjackGame {
 		
 		while (keepPlaying && player.getBalance() >= MIN_BET) { //while the player has at least the minimum betting requirement
 			initializeRound(); // Calls the initializeRound method (resets,clears, re shuffles)
+			
 			bettingAmount = promptBet(input); // Ask player for bet amount.
 			dealInitialCards();
 	
 			playerTurn(input);
-			//The rest of the methods are needed still, like dealingintialcards, playerturn, delearturn, etc.
-
 			
-			
+			payout(result);
 			
 			keepPlaying = askToKeepGoing(input);
 		}
@@ -83,15 +83,19 @@ public class BlackjackGame {
 		//Method: Resets everything for a new game.
 		//Clears both hands(Player and Dealer).
 		//Reshuffles the deck.
+		result = "";
+		revealDealerCard = false;
 		
 		player.emptyHand();//Clear cards from players hand, gives both dealer and player new card deck.
 		dealer.emptyHand();//Clear cards from players hand
 		
-		//Create and shuffle new card deck.
-		deck = new CardDeck();
-		deck.shuffleDeck();
-		
-		System.out.println("\n--- New Round ---");
+		//Create and shuffle new card deck only when low.
+		if (deck.size() < 15) {
+			deck = new CardDeck();
+			deck.shuffleDeck();
+			
+		}
+		gameMenu.showNewRound();
 	}
 	/**
 	 * Deals initial two cards to both player and dealer
@@ -108,9 +112,15 @@ public class BlackjackGame {
 		//Second Dealer Card
 		dealer.addCardToHand(deck.dealCard());
 		
+		
+//		dealer.addCardToHand(new Card(2, "heart"));
+//		dealer.addCardToHand(new Card(1, "heart"));
 		//for testing
+//		player.addCardToHand(new Card(1, "heart"));
 //		player.addCardToHand(new Card(2, "heart"));
-//		player.addCardToHand(new Card(10, "heart"));
+//		dealer.addCardToHand(new Card(1, "heart"));
+//		dealer.addCardToHand(new Card(2, "heart"));
+
 //		player.addCardToHand(new Card(12, "heart"));
 		
 	}
@@ -125,44 +135,42 @@ public class BlackjackGame {
 		boolean valid = false;
 		
 		while (!valid) {
-			System.out.println("Enter your bet (minimum $" + MIN_BET + "): ");
+			gameMenu.showAskBet(MIN_BET);
 			try {
 				bettingAmount = Integer.parseInt(input.nextLine());
 				
 				if (bettingAmount < MIN_BET) {
-					System.out.println("Your bet must be at least $" + MIN_BET + ".");
+					gameMenu.showInvalidBet(MIN_BET);
 				} else if (bettingAmount > maxBet) {
-					System.out.println("You cannot bet more than your balance ($" + maxBet + ").");
+					gameMenu.showInvalidBetBalance(maxBet);
+					
 				} else {
 					valid = true;
 				}
 				
 			} catch (NumberFormatException e) {
-				System.out.println("Please enter a valid number.");
+				gameMenu.showPleaseEnterValidNum();
 			}
 		}
 		
-		System.out.println("Your bet $" + bettingAmount + ". Good lyck!");
+		
+		gameMenu.showPlayersBet(bettingAmount);
 		return bettingAmount;
 	}
 	
 	private boolean askToKeepGoing(Scanner input) {
-		System.out.println("Would you like to keep playing (y/n)? ");
+		gameMenu.showAskContinue();
 		String choice = input.nextLine().toLowerCase().trim();
 		return choice.equals("y");
 	}
-	
-	private int updateBalanceAfterRound(int result) { // Method: Adjusts player's balance based on game outcome.
-		return result;
-	}
-	
+		
 	private void checkPlayerBalance() { //This method will make sure the player never plays with $0.
 		double balance = player.getBalance();
 		
 		if(balance >= 2) {
-			System.out.println("You have enough to play $" + balance + "!");
+			gameMenu.showEnoughBal(balance);
 		} else {
-			System.out.println("You don't have enough to play $" + balance + ".");
+			gameMenu.showNotEnoughBal(balance);
 		}
 		
 		
@@ -172,77 +180,83 @@ public class BlackjackGame {
 	//Gameplay
 	
 	private void playerTurn(Scanner input) {
-		boolean keepPlaying = true;
+		boolean keepDrawing = true;
 
-		while(keepPlaying) {
-			System.out.println("\nYour Hand: " + player.getHand()); // temporary display
+		while(keepDrawing) {
 			int handValue = calculateHandValue(player.getHand());
-			System.out.println("Your Total Hand Value: " + handValue); // temporary display
 			
-			tableDisplay(player.getHand(), dealer.getHand());  //calls to display the cards on screen
+			result = determineWinner();
 			
-			if (isBust(player.getHand())) { 		//check if player is bust
-				System.out.println("You Busted!"); // temporary display
-				break;
+			tableDisplay(player.getHand(), dealer.getHand()); // calls to display the cards on screen, fix the formatting and whitespace
+
+			
+
+			
+			//check if both dealer/player has blackjack || check if only dealer has blackjack or player bust || check is only player has blackjack
+			if (result == "instaTie" || result == "instaLoss" || result == "instaBlackjack" ) { 	
+				return;
 			}
 			
-			if(isBlackJack(player.getHand())) {  //check if player is bust
-				System.out.println("You Have BLACKJACK!"); // temporary display
-				break; 
+			keepDrawing = playerHitStandChoice(); // calls to prompt hit or stand choice and returns falls if they choose to stand
+			
+			if (!keepDrawing) {
+				revealDealerCard = !keepDrawing;
+				dealerTurn();
 			}
-	
-			keepPlaying = playerHitStandChoice(); // calls to prompt hit or stand choice and returns falls if they choose to stand
+			
 		}
 	}
 	
-	private void tableDisplay(List<Card> playerHandList, List<Card> dealerHandList) { 
+	private void tableDisplay(List<Card> playerHandList, List<Card> dealerHandList) {
+		boolean show = result == "instaTie" || result == "instaLoss" || result == "instaBlackjack" || revealDealerCard == true;
 		String playerCard = "";		
 		String dealerCard = "";	
-		int maxHandSize = dealerHandList.size();		
-		
-		gameMenu.showSearchTableLabel();				//first call to display the labels
 
-		if (playerHandList.size() > dealerHandList.size()){				//if the playershand more than dealerHandList.size()
-			maxHandSize = playerHandList.size();		//set the maxHandSize to the one with the most amount of cards
+		int maxHandSize = dealerHandList.size();
+
+		gameMenu.showSearchTableLabel(); // first call to display the labels
+
+		if (playerHandList.size() > dealerHandList.size()) { // if the players hand has more than dealerHandList.size()
+			maxHandSize = playerHandList.size(); // set the maxHandSize to the one with the most amount of cards
 		}
-		
-		for(int i = 0; i < maxHandSize; i++) {		//the loop makes a row for the table and makes as much as the maxHandSize
-			
-			if (playerHandList.size() <= i) {		//check if the row being created is more than the the size of the players hand
-				playerCard = "";						//if so, then display a blank in the row for the player collumn
+
+		for (int i = 0; i < maxHandSize; i++) { // the loop makes a row for the table and makes as much as the maxHandSize
+
+			if (playerHandList.size() <= i) { // check if the row being created is more than the size of the players hand
+				playerCard = ""; // if so, then display a blank in the row for the player column
 			}
 			else {					
-				playerCard = playerHandList.get(i).toString();		//else, turn the Card object to a string
+				playerCard = playerHandList.get(i).toString(); // else, turn the Card object to a string
 			}
 			
-			if (dealerHandList.size() <= i) {		//check if the row being created is more than the the size of the players hand
-				dealerCard = "";						//if so, then display a blank in the row for the player collumn
+			if (!show && i==1) {  //hide the second card of the dealer until game ends or player turn ends (stand)
+				dealerCard = ""; 
+			}
+			else if (dealerHandList.size() <= i) { // check if the row being created is more than the size of the dealers hand
+				dealerCard = ""; // if so, then display a blank in the row for the dealer column
 			}
 			else {					
-				dealerCard = dealerHandList.get(i).toString();		//else, turn the Card object to a string
+				dealerCard = dealerHandList.get(i).toString(); // else, turn the Card object to a string
 			}
-			gameMenu.showTableCard(playerCard, dealerCard);			
+
+			gameMenu.showTableCard(playerCard, dealerCard);
 		}
-//		menu.showPlayerData(name, n);
-			
-	
-		
-	}
+}
 
 	private boolean playerHitStandChoice() {
 		boolean keepPlaying = true; 
 		while(true) {
-			System.out.println("Would you like to \n(1) Hit \n(2) Stand ");  // temporary display
+			gameMenu.showAsHitStand();
 			String choice = input.nextLine();
 			
 			switch (choice) {
 				case "1":
 					player.addCardToHand(deck.dealCard());
-					System.out.println("You drew a new card.");  // temporary display
+					gameMenu.showHitIndicator();
 					break;
 				
 				case "2":
-					System.out.println("You chose to stand."); // temporary display
+					gameMenu.showStandIndicator();
 					keepPlaying = false;
 					break;
 				
@@ -254,12 +268,111 @@ public class BlackjackGame {
 
 		
 	}
+	/**
+	 * Controls the dealers turn.
+	 * The dealer must always draw a card until their hand value is at least 17.
+	 * If the dealer's total hand value goes over 21, they bust which means they lose
+	 * automatically.
+	 * 
+	 * Rules: 
+	 * Dealer shows their card before starting their turn.
+	 * Dealer has to hit while total is 16 or less.
+	 * Dealer has to stand once total is 17 or higher (including soft 17)
+	 * If the dealer goes over 21 total hand value, it's a bust and 
+	 * the player wins the round.
+	 */
 
 	private void dealerTurn() { //hit <= 16, stand >= 17
 		
+		gameMenu.showDealerTurn();
+
+		tableDisplay(player.getHand(), dealer.getHand());
+		
+		
+		//calculate dealers initial total.
+		int dealerTotal = calculateHandValue(dealer.getHand());
+		
+		
+		//If the dealers total hand is less than 17, they must hit
+		while (dealerTotal < 17) {
+			gameMenu.showDealerHit(dealerTotal);
+			
+			//Draws another card from the deck and adds to dealer's hand
+			dealer.addCardToHand(deck.dealCard());
+		
+			//Re calculate the dealer's hand since a new card was drawed.
+			dealerTotal = calculateHandValue(dealer.getHand());
+			
+			tableDisplay(player.getHand(), dealer.getHand());
+			
+		}
+		// Dealer stands once total is 17 or more
+		gameMenu.showDealerStand(dealerTotal);
+		
+		result = determineWinner();
+		
+		if (result == "instaWin") { 	//dealer bust (dealer hsa more than 21
+			return;
+		}
 	}
 	
 	
+	//////////////NO NEED FOR THIS calculateHandValue() DOES THE JOB AND YOU DID while (dealerTotal < 17) WHICH IS GOOD ENOUGH TRUST AND TEST IT YOURSELF
+	///
+	///
+	///
+	/**
+	 * This method calculates the total hand value for the dealer according
+	 * to the balckjack game rules.
+	 * 
+	 * Calculate the total value of the dealer's cards. It handles face cards
+	 * (J, Q, K) as 10, and also makes sure the rule for the ace is good
+	 * (1 or 11) depending on which one of those numbers keeps the dealers total hand
+	 * value within (17-21) - inclusive.
+	 * 
+	 * Rules:
+	 * Face cards = 10.
+	 * Aces initially count as 1.
+	 * If we count Ace as an 11 and the total stays between 17 and 21(inclusive),
+	 * it will be treated as 11.(soft 17 rule)
+	 * If the total hand value goes over 21, the dealer will bust
+	 * 
+	 * @param hand A list of Card objects representing the dealers hand.
+	 * @return The total value of the dealer's hand.
+	 */
+	private int calculateDealerHandValue(List<Card> hand) {
+		
+		//Variables, dealers hand total, how many aces in hand.
+		int total = 0;
+		int aces = 0;
+		
+		//loop through each card in the dealers hand
+		for (Card c : hand) {
+			//getting the numerical value of the card
+			int value = c.getValue();
+			
+			//face cards(J, Q, K) = 10
+			if(value > 10) {
+				value = 10;
+			}
+			
+			
+			total += value;
+			
+			//If the card is an Ace(value 1)
+			if (c.getValue() == 1) {
+				aces++;
+			}
+		}
+		
+		//Applying the soft 17 rule
+		if (aces > 0 && total + 10 >= 17 && total + 10 <= 21) {
+			total +=10;
+		}
+		//return final total value of dealers hand
+		return total;
+	}
+
 	/**
 	 * This method calculates the total value of a hand
 	 * 
@@ -267,7 +380,7 @@ public class BlackjackGame {
 	 * and keeps track of the aces (does not add it yet)
 	 * Second loop: if there are aces, and if the total value of the hand is more
 	 * than 21 if the ace is worth 11, then the ace will be worth 1
-	 * if its less than 21 if the ace is worth 11 then the ace will be worth 11
+	 * if its less than 21 if the ace is worth 11, then the ace will be worth 11
 	 * 
 	 * @param list this is the list that contains the several cards the dealer or the player has
 	 * @return Returns the total value of the hand as an int
@@ -323,32 +436,53 @@ public class BlackjackGame {
 	 * @return true if total hand is above 21, False if less
 	 */
 	private boolean isBust(List<Card> handList) { // handval is calculated from using calculateHandValue method
-		int handValue = calculateHandValue(player.getHand());
+		int handValue = calculateHandValue(handList);
 		return handValue > 21;
-
 	}
 	
 	/**
 	 * This method determines the results of the game when it ends
 	 * 
-	 * @return if the match was a tie loss or a regular win
+	 * @return the result f=of the match as a string
 	 */
 	private String determineWinner() {
+		boolean playerHasBlackJack = isBlackJack(player.getHand());
+		boolean DealerHasBlackJack = isBlackJack(dealer.getHand());
 		int playerHandVal= calculateHandValue(player.getHand());
 		int dealerHandVal= calculateHandValue(dealer.getHand());
-		String results = "";
-
-		if (playerHandVal == dealerHandVal){	//if playerhandval is the same as daalerhandval then set the results to "tie"
-			results = "tie";						//but does not end the game
+		boolean playerBust= isBust(player.getHand());
+		boolean dealerBust= isBust(dealer.getHand());
+		
+				
+		
+		//if the word returned has insta then the game ends
+		
+		if(playerBust) { //if playerBust  then player instantly lose
+			return "instaLoss";
 		}
-		else if (playerHandVal < dealerHandVal ) { // if the playerhandval is less than dealer handval then set results to "loss"
-			results = "loss";
+		else if(dealerBust) { //if dealerBust then the player instantly wins
+			return "instaWin";
+		}
+		else if(playerHasBlackJack && DealerHasBlackJack) { // if both have a blackjack game instantly ends in a tie
+			return "instaTie";															  
+		}
+		else if (playerHasBlackJack) { //if only the player has the blackjack then player wins a special amount (1.5x) and player instantly wins
+			return "instaBlackjack";
+		}
+		else if(DealerHasBlackJack) { // if only the dealer has a blackjack then player instantly loses
+			return "instaLoss";											 					
+		}
+		else if (playerHandVal == dealerHandVal){	//if playerhandval is the same as daalerhandval then set the results to "regularTie"
+			return "regularTie";						//but does not end the game
+		}
+		else if (playerHandVal < dealerHandVal ) { // if the playerhandval is less than dealer handval then set results to "regularLoss"
+			return "regularLoss";
 		}
 		else if (playerHandVal > dealerHandVal) { // if the playerHandval is more than dealeHandVal then set results to "regularWin"
-			results = "regularWin";
-		} 
-		
-		return  results;
+			return "regularWin";
+		} else {
+			return null;
+		}
 
 	}
 	
@@ -357,24 +491,35 @@ public class BlackjackGame {
 	 * @param result the result of the match, whether its a blackjack for the player, a tie, or just a regular win
 	 */
 	private void payout(String result) {
-		double blackJackPayoutMultiplier= 1.5;
+		
 		
 		switch (result) {
-		case "blackjack": 
-			player.setBalance(player.getBalance() + (blackJackPayoutMultiplier * bettingAmount));
+		case "instaBlackjack": 
+			player.setBalance(player.getBalance() + (BLACKJACK_MULTIPLIER * bettingAmount));
+			gameMenu.showPlayerBlackjack();
+			gameMenu.showWin(BLACKJACK_MULTIPLIER * bettingAmount);
+			player.incrementWins();
+			gameMenu.showPlayerNewBalance(player.getBalance());
 			break;
 			
 		
 		case "regularWin":
+		case "instaWin":
 			player.setBalance(player.getBalance() +  bettingAmount);
+			gameMenu.showWin(bettingAmount);
+			player.incrementWins();
 			break;
 		
-		case "tie":
+		case "regularTie":
+		case "instaTie":
+			gameMenu.showTie();
 			//keep there current balance they win nor lose any
 			break;
 
-		case "loss": 
+		case "regularLoss": 
+		case "instaLoss":
 			player.setBalance(player.getBalance() -  bettingAmount);
+			gameMenu.showLoss(bettingAmount);
 			break;	
 		}
 	}
@@ -382,21 +527,53 @@ public class BlackjackGame {
 	
 	//Display
 	
-	private void displayTable() {
-		
+	
+	
+	/**
+	 * Displays the final outcome of the round after both the player and dealer have finished
+	 * there turn(s).
+	 * 
+	 * Shows whether the player won, lost, tied, or got a blackjack,
+	 * and displays the updated balance afterwards.
+	 * 
+	 * @param result The outcome of the round (eg. "blackjack", "regularwin", "loss", or "tie").
+	 */
+	private void displayResults(String result) { // *Lorenzo You have separate methods for each case in gameplayMenu so I 
+												// 	made this since its all in one method which should be easier to use and call.*
+												// If we can't have it in this class just move it to another but make sure its accessible.
+	    System.out.println();
+	    System.out.println("-------- ROUND RESULTS --------");
+
+	    // Determine message based on result outcome
+	    switch (result.toLowerCase()) {
+	        case "blackjack":
+	            System.out.println("Blackjack! You win payout!");
+	            break;
+
+	        case "regularwin":
+	            System.out.println("You win this round!");
+	            break;
+
+	        case "tie":
+	            System.out.println("It's a tie! Your bet is returned.");
+	            break;
+
+	        case "loss":
+	            System.out.println("Dealer wins this round.");
+	            break;
+
+	        default:
+	            System.out.println("Round done.");
+	            break;
+	    }
+
+	    // Display the updated balance at the end of the round
+	    System.out.println("-------------------------------");
+	    System.out.printf("Your new balance: $%.2f%n", player.getBalance());
+	    System.out.println("-------------------------------\n");
 	}
-	
-	private void displayResults() {
-		
-	}
-	
-	private void displayBalance() {
-		
-	}
-	
-	
-	
-	
+
+
 	
 	
 	
