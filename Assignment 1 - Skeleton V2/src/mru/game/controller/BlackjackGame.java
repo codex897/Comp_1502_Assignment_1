@@ -179,7 +179,7 @@ public class BlackjackGame {
 			int handValue = calculateHandValue(player.getHand());
 			System.out.println("Your Total Hand Value: " + handValue); // temporary display
 			
-			tableDisplay(player.getHand());  //calls to display the cards on screen
+			tableDisplay(player.getHand(), dealer.getHand());  //calls to display the cards on screen
 			
 			if (isBust(player.getHand())) { 		//check if player is bust
 				System.out.println("You Busted!"); // temporary display
@@ -195,13 +195,14 @@ public class BlackjackGame {
 		}
 	}
 	
-	private void tableDisplay(List<Card> playerHandList) { //this is just temporary, it should also accept dealerHandList
-		String playerCard = "";						
-		int maxHandSize = 4;							//temporary its 4 but should be dealerHandList.size()
+	private void tableDisplay(List<Card> playerHandList, List<Card> dealerHandList) { 
+		String playerCard = "";		
+		String dealerCard = "";	
+		int maxHandSize = dealerHandList.size();		
 		
 		gameMenu.showSearchTableLabel();				//first call to display the labels
 
-		if (playerHandList.size() > 4){				//if the playershand more than dealerHandList.size()
+		if (playerHandList.size() > dealerHandList.size()){				//if the playershand more than dealerHandList.size()
 			maxHandSize = playerHandList.size();		//set the maxHandSize to the one with the most amount of cards
 		}
 		
@@ -213,7 +214,14 @@ public class BlackjackGame {
 			else {					
 				playerCard = playerHandList.get(i).toString();		//else, turn the Card object to a string
 			}
-			gameMenu.showTableCard(playerCard, "");			//temporary, the "" should be dealerCard
+			
+			if (dealerHandList.size() <= i) {		//check if the row being created is more than the the size of the players hand
+				dealerCard = "";						//if so, then display a blank in the row for the player collumn
+			}
+			else {					
+				dealerCard = dealerHandList.get(i).toString();		//else, turn the Card object to a string
+			}
+			gameMenu.showTableCard(playerCard, dealerCard);			
 		}
 //		menu.showPlayerData(name, n);
 			
