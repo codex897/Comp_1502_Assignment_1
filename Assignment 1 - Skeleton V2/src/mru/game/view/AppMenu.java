@@ -179,6 +179,7 @@ public class AppMenu {
 	 */
 	public void showSaveProgress() {
 		// SHow a visual to let user know its saving
+		System.out.println("");
 		System.out.println("Saving...");
 		System.out.println("Done! Please visit us again!");
 		
