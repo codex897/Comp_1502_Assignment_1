@@ -508,6 +508,7 @@ public class BlackjackGame {
 			player.setBalance(player.getBalance() +  bettingAmount);
 			gameMenu.showWin(bettingAmount);
 			player.incrementWins();
+			gameMenu.showPlayerNewBalance(player.getBalance());
 			break;
 		
 		case "regularTie":
@@ -520,6 +521,7 @@ public class BlackjackGame {
 		case "instaLoss":
 			player.setBalance(player.getBalance() -  bettingAmount);
 			gameMenu.showLoss(bettingAmount);
+			gameMenu.showPlayerNewBalance(player.getBalance());
 			break;	
 		}
 	}
