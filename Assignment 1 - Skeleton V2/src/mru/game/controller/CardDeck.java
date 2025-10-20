@@ -60,9 +60,30 @@ public class CardDeck {
 	public ArrayList<Card> getDeck() {
 		return deck;
 	}
-
+	
+	/**
+	 * Removes and returns the top card from the deck.
+	 * This is used when dealing a card to the player or dealer.
+	 * 
+	 * @return the top {@code Card} in the deck
+	 */
 	public Card dealCard() {
-		return cards.remove(0); // Picking out card from ArrayList (0)
+		return deck.remove(0);
+	}
+	
+	/*
+	 * Returns the number of cards remaining in the deck.
+	 * 
+	 * This method allows for other parts of the game to check
+	 * whether the deck is running low and needs to be reshuffled before
+	 * dealing more cards.
+	 * 
+	 * 
+	 * @return The total number of cards left in the deck.
+	 */
+
+	public int size() {
+		return deck.size();
 	}
 	
 }
