@@ -47,7 +47,7 @@ public class BlackjackGame {
 	
 	// Game Flow
 
-	public void startGame(){ // ************* THIS IS NOT DONE STILL NEED TO ADD THE REST OF THE METHODS IN ORDER, THEN THE GAME WILL RUN AND UPDATE CORRECTLY **************
+	public void startGame(){
 		// Checks player balance for eligibility before starting any rounds.
 		checkPlayerBalance();
 		
