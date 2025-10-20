@@ -32,7 +32,7 @@ public class Player implements Comparable<Player> {
 	/**
 	 * This List holds the card object for the current player
 	 */
-	private List<Card> hand; //the players hand
+	private List<Card> hand; //the players hand containing all card objects
 	
 	/**
 	 * This Constructor initiates the ArrayList and constructs the player with the name balance and number of wins
@@ -129,17 +129,18 @@ public class Player implements Comparable<Player> {
 	}
 	
 	/**
-	 * .................................................
+	 * This method adds a card object to the players hand
 	 * 
-	 * @param card
+	 * @param card the Card object with its rank and suit
 	 */
 	public void addCardToHand(Card card) {
 		hand.add(card);
 	}
 	
 	/**
+	 * This method returns all the card object inside the players List
 	 * 
-	 * @return
+	 * @return  all the cards the player currently holds
 	 */
 	public List<Card> getHand() {
 	  return hand;
@@ -167,91 +168,3 @@ public class Player implements Comparable<Player> {
 	 * It is basically a model class for each record in the txt file
 	 */
 }
-
-
-
-
-
-
-
-//
-//package mru.game.model;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import mru.game.controller.Card;
-//
-//public class Player implements Comparable<Player> {
-//	String name; 
-//	int numOfWins;
-//	private int balance;
-//	private List<Card> hand;
-//	
-//	public Player(String name, int balance, int numOfWins) {
-//		this.name = name;
-//		this.balance = balance;
-//		this.numOfWins = numOfWins;
-//		this.hand = new ArrayList<>();
-//		
-//	}
-//
-//	public String getName() {
-//		return name;
-//	}
-//
-//	public void setName(String name) {
-//		this.name = name;
-//	}
-//	
-//	public int getNumOfWins() {
-//		return numOfWins;
-//	}
-//
-//	public void setNumOfWins(int numOfWins) {
-//		this.numOfWins = numOfWins;
-//	}
-//	
-//	public int getBalance() {
-//		return balance;
-//	}
-//	
-//	public void setBalance(int balance) {
-//		this.balance = balance;
-//	}
-//	
-//	public void incrementWins() {
-//		this.numOfWins++;
-//	}
-//	
-//	public void emptyHand() {
-//		hand.clear();
-//	}
-//	
-//	public void addCardToHand(Card card) {
-//		hand.add(card);
-//	}
-//	
-//	@Override
-//	public String toString() {
-//		return "Name: " + name + "Number of Wins:" + numOfWins;
-//	}
-//	
-//	public int compareTo(Player otherPlayer) {
-//		/*creates the comparison rules for .sort method in GameManager
-//		 * Rule: Sort by listing top score to lowest score
-//		 */
-//		
-//		return (otherPlayer.getNumOfWins() - this.getNumOfWins());
-//	}
-//
-//	public List<Card> getHand() {
-//        return hand;
-//    }
-//	
-//	
-//	/**
-//	 * This class represent each player record in the Database
-//	 * It is basically a model class for each record in the txt file
-//	 */
-//}

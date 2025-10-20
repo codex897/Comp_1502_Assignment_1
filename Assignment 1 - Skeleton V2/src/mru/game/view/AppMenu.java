@@ -5,6 +5,10 @@ import java.util.Scanner;
 
 import mru.game.model.Player;
 
+
+/**
+ * This class is the menu display class for the main and sub menus 
+ */
 public class AppMenu {
 		
 	/**
@@ -16,7 +20,8 @@ public class AppMenu {
 	/**
 	 * This displays a border made of "*"
 	 */
-	private final String X = "***************************************************************************";
+	private final String X = "*************************************************************************";
+	
 	
 	/**
 	 * This constructor initiates the Scanner
@@ -132,7 +137,7 @@ public class AppMenu {
 		double bal = user.getBalance();
 		
 		System.out.println(X);
-		System.out.println("**\t\tWelcome back " + name + "\t\tYour Balance is $: " + bal + "\t**");
+		System.out.println("**   Welcome back " + name + String.format("   ---   Your Balance is: %.2f $", bal) + "\t**");
 		System.out.println(X);
 	}
 
@@ -147,7 +152,7 @@ public class AppMenu {
 		double bal = user.getBalance();
 		
 		System.out.println(X);
-		System.out.println("**\t\tWelcome " + name + "\t\tYour initial Balance is $: " + bal + "\t**");
+		System.out.println("**   Welcome " + name + String.format("   ---   Your initial Balance is: %.2f $", bal) + "\t**");
 		System.out.println(X);
 	}
 

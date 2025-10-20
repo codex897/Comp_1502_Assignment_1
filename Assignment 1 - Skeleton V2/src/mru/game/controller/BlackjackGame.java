@@ -9,27 +9,69 @@ import mru.game.model.Player;
 import mru.game.view.AppMenu;
 import mru.game.view.gameplayMenu;
 
+/**
+ * This class represents the logic for the blackjack game
+ * 
+ */
 public class BlackjackGame {
-
-	/**
-	 * In this class you implement the game
-	 * You should use CardDeck class here
-	 * See the instructions for the game rules
-	 */
 	
+	/**
+	 * The player playing the game
+	 */
 	private Player player;
+	
+	/**
+	 * The dealer in the game
+	 */
 	private Dealer dealer;
+	
+	/**
+	 * The players bet for the round
+	 */
 	private int bettingAmount;
+	
+	/**
+	 * the deck representing the full 52 shuffled card
+	 */
 	private CardDeck deck;
 	
+	/**
+	 * The multiplier for when the player gets blackjack and wins the money 
+	 */
 	final double BLACKJACK_MULTIPLIER= 1.5;
+	
+	/**
+	 * The minimum amount the player can bet
+	 */
 	private static final int MIN_BET = 2;
+	
+	/**
+	 * the result of the current status/round
+	 */
 	String result;
+	
+	/**
+	 * This indicates if the cards of the dealer should be revealed (flag)
+	 */
 	boolean revealDealerCard;
+	
 	Scanner input;
+	
+	/**
+	 * The menu for displaying
+	 */
 	private AppMenu menu;
+	
+	/**
+	 * The menu for displaying gameplay
+	 */
 	private gameplayMenu gameMenu;
 	
+	/**
+	 * Creates a nee blackjack game and initializes the nessary game components to play the game
+	 * 
+	 * @param player the player object who is playing the game
+	 */
 	public BlackjackGame(Player player) { //Constructor
 		input = new Scanner(System.in);
 		menu = new AppMenu();
@@ -41,13 +83,15 @@ public class BlackjackGame {
 		this.deck = new CardDeck();
 		this.deck.shuffleDeck();
 		
-		
 		startGame();
 	}
 	
 	// Game Flow
 
-	public void startGame(){ // ************* THIS IS NOT DONE STILL NEED TO ADD THE REST OF THE METHODS IN ORDER, THEN THE GAME WILL RUN AND UPDATE CORRECTLY **************
+	/**
+	 * This method starts the game and loops until the player wants to stop
+	 */
+	public void startGame(){
 		// Checks player balance for eligibility before starting any rounds.
 		checkPlayerBalance();
 		
@@ -72,22 +116,24 @@ public class BlackjackGame {
 		
 		
 	}
-	
-	
-	
-	
 
 	//Setup Methods
 	
+	/**
+	 * Prepares a new round of Blackjack.
+	 * This method Resets everything for a new game.
+	 * Clears both hands(Player and Dealer)
+	 * Reshuffles the deck when it becomes low.
+	 */
+	
 	private void initializeRound() {
-		//Method: Resets everything for a new game.
-		//Clears both hands(Player and Dealer).
-		//Reshuffles the deck.
-		result = "";
-		revealDealerCard = false;
+		// Reset round status values to start round fresh
+		result = ""; //Clears any previous round result
+		revealDealerCard = false; //Hides dealer's second card at the start of a new round
 		
-		player.emptyHand();//Clear cards from players hand, gives both dealer and player new card deck.
-		dealer.emptyHand();//Clear cards from players hand
+		//Clear cards from player's and dealer's hands from last round
+		player.emptyHand();
+		dealer.emptyHand();
 		
 		//Create and shuffle new card deck only when low.
 		if (deck.size() < 15) {
@@ -125,30 +171,42 @@ public class BlackjackGame {
 		
 	}
 	
-	//Betting / Checking player balance
-	
+	/**
+	 * Prompts the player to enter a betting amount before each round.
+	 * 
+	 * Makes sure that the player's inputs follow all betting rules
+	 * @param input the {@link Scanner} used to get user input from the console.
+	 * @return The validated bet amount as an integer.
+	 */
 	private int promptBet(Scanner input) { 
-		// Method: Ask player for bet amount, and makes sure there's enough balance, 
-		// and bet amount >= 2, and makes sure it follows game rules
+		
+		//Get the player's current max allowed bet(total balance)
 		double maxBet = player.getBalance();
+		
+		//Local variables for validation
 		int bet = 0;
 		boolean valid = false;
 		
+		//Keeps looping until the player enters a valid betting amount.
 		while (!valid) {
 			gameMenu.showAskBet(MIN_BET);
+			
 			try {
+				//Comvert the player's input into an integer
 				bettingAmount = Integer.parseInt(input.nextLine());
 				
+				//Validation checks
+				//If the betting amount is below minimum bet, show an error message
 				if (bettingAmount < MIN_BET) {
 					gameMenu.showInvalidBet(MIN_BET);
 				} else if (bettingAmount > maxBet) {
 					gameMenu.showInvalidBetBalance(maxBet);
-					
 				} else {
 					valid = true;
 				}
 				
 			} catch (NumberFormatException e) {
+				// If the player enters anything that isn't a number
 				gameMenu.showPleaseEnterValidNum();
 			}
 		}
@@ -158,31 +216,64 @@ public class BlackjackGame {
 		return bettingAmount;
 	}
 	
+	/**
+	 * Asks the player if they would like to keep playing another round.
+	 * 
+	 * The player's input is taken and converted to lowercase and trimmed of spaces.
+	 * If player enters 'y', the game will continue any other input will end the game loop.
+	 * @param input the {@link Scanner} object used to get the player's input.
+	 * @return {@code true} if the player chooses to continue, {@code false} otherwise.
+	 */
+	
 	private boolean askToKeepGoing(Scanner input) {
 		gameMenu.showAskContinue();
+		// Read the player's choice, trim spaces, and convert to lowercase
 		String choice = input.nextLine().toLowerCase().trim();
+		// If player enters "y", continue playing, if not then stop the game
 		return choice.equals("y");
 	}
-		
-	private void checkPlayerBalance() { //This method will make sure the player never plays with $0.
+	
+	/**
+	 * Checks if the player's balance is enough to play another round.
+	 * 
+	 * Method: Makes sure the player's balance is not below minimum bet amount.
+	 * It calls different display messages through the {@code gameplayMenu} depending
+	 * on whether the player has enough money or not.
+	 * 
+	 * 
+	 */
+	private void checkPlayerBalance() {
+		// Get the player's current balance using the Player class getter
 		double balance = player.getBalance();
 		
+		// If the balance meets or goes over minimum bet, show message.
 		if(balance >= 2) {
-			gameMenu.showEnoughBal(balance);
+//			gameMenu.showEnoughBal(balance);
 		} else {
 			gameMenu.showNotEnoughBal(balance);
 		}
-		
 		
 	}
 	
 	
 	//Gameplay
 	
+	/**
+	 * Runs the player's actions phase for the current round.
+	 * 
+	 * While acting, the dealers hole card remains hidden.
+	 * After each action, the current table is displayed.
+	 * If the player busts, the turn ends right away.
+	 * If the player stands, the dealer's hole is revealed and then the dealer plays.
+	 * 
+	 * @param input shared {@link Scanner} for user input (Stand/Hit).
+	 */
+	
 	private void playerTurn(Scanner input) {
 		boolean keepDrawing = true;
 
 		while(keepDrawing) {
+			//Recalculate and show current state each loop iteration
 			int handValue = calculateHandValue(player.getHand());
 			
 			result = determineWinner();
@@ -197,16 +288,26 @@ public class BlackjackGame {
 				return;
 			}
 			
-			keepDrawing = playerHitStandChoice(); // calls to prompt hit or stand choice and returns falls if they choose to stand
+			keepDrawing = playerHitStandChoice(); // calls to prompt hit or stand choice and returns false if they choose to stand
 			
 			if (!keepDrawing) {
+				
 				revealDealerCard = !keepDrawing;
+				//Dealer will draw cards until their total is at least 17
 				dealerTurn();
 			}
 			
 		}
 	}
 	
+	
+	/**
+	 * This method creates a table by calling print statements from the gameplayMenu class
+	 * by using loop to print each row.
+	 * The method also hides the second card of the dealer until the game ends or the player chooses to stand (dealers turn)
+	 * @param playerHandList a list of card objects the player has
+	 * @param dealerHandList a list of card objects the dealer  has
+	 */
 	private void tableDisplay(List<Card> playerHandList, List<Card> dealerHandList) {
 		boolean show = result == "instaTie" || result == "instaLoss" || result == "instaBlackjack" || revealDealerCard == true;
 		String playerCard = "";		
@@ -242,11 +343,28 @@ public class BlackjackGame {
 			gameMenu.showTableCard(playerCard, dealerCard);
 		}
 }
-
+	
+	/**
+	 * Asks the player to choose between "Hit" or "Stand".
+	 * 
+	 * This method will keep asking for input until they enter a valid option.
+	 * 
+	 * Player can:
+	 * Hit- draw another card from the deck.
+	 * Stand - end their turn and allow the dealer to play.
+	 * 
+	 * 
+	 * @return {@code true} if the player chooses to hit(draw cards),
+	 * 		   {@code false} if the player chooses to stand(end their turn).
+	 */
 	private boolean playerHitStandChoice() {
-		boolean keepPlaying = true; 
+		boolean keepPlaying = true;
+		//Looop continues until a valid input is given ("1" or "2")
 		while(true) {
+			
 			gameMenu.showAsHitStand();
+			
+			//Read player's input from console
 			String choice = input.nextLine();
 			
 			switch (choice) {
@@ -316,63 +434,6 @@ public class BlackjackGame {
 		}
 	}
 	
-	
-	//////////////NO NEED FOR THIS calculateHandValue() DOES THE JOB AND YOU DID while (dealerTotal < 17) WHICH IS GOOD ENOUGH TRUST AND TEST IT YOURSELF
-	///
-	///
-	///
-	/**
-	 * This method calculates the total hand value for the dealer according
-	 * to the balckjack game rules.
-	 * 
-	 * Calculate the total value of the dealer's cards. It handles face cards
-	 * (J, Q, K) as 10, and also makes sure the rule for the ace is good
-	 * (1 or 11) depending on which one of those numbers keeps the dealers total hand
-	 * value within (17-21) - inclusive.
-	 * 
-	 * Rules:
-	 * Face cards = 10.
-	 * Aces initially count as 1.
-	 * If we count Ace as an 11 and the total stays between 17 and 21(inclusive),
-	 * it will be treated as 11.(soft 17 rule)
-	 * If the total hand value goes over 21, the dealer will bust
-	 * 
-	 * @param hand A list of Card objects representing the dealers hand.
-	 * @return The total value of the dealer's hand.
-	 */
-	private int calculateDealerHandValue(List<Card> hand) {
-		
-		//Variables, dealers hand total, how many aces in hand.
-		int total = 0;
-		int aces = 0;
-		
-		//loop through each card in the dealers hand
-		for (Card c : hand) {
-			//getting the numerical value of the card
-			int value = c.getValue();
-			
-			//face cards(J, Q, K) = 10
-			if(value > 10) {
-				value = 10;
-			}
-			
-			
-			total += value;
-			
-			//If the card is an Ace(value 1)
-			if (c.getValue() == 1) {
-				aces++;
-			}
-		}
-		
-		//Applying the soft 17 rule
-		if (aces > 0 && total + 10 >= 17 && total + 10 <= 21) {
-			total +=10;
-		}
-		//return final total value of dealers hand
-		return total;
-	}
-
 	/**
 	 * This method calculates the total value of a hand
 	 * 
@@ -417,10 +478,25 @@ public class BlackjackGame {
 	}
 	
 
-	
-	private boolean isBlackJack(List<Card> handList) { //Checks for a natural blackjack(Ace card + 10)
+	/**
+	 * Checks if the given hand is a natural blackjack.
+	 * 
+	 * A natural blackjack happens when the first two cards dealt total to 
+	 * exactly 21.
+	 * 
+	 * 
+	 * @param handList a list of {@link Card} objects representing either the
+	 * player's or dealer's hand.
+	 * @return {@code true} if the hand has exactly two cards and 
+	 * their total value equals 21, {@code false} otherwise.
+	 */
+	private boolean isBlackJack(List<Card> handList) {
+		//Calculate the total hand value.
 		int handValue = calculateHandValue(handList);
 		
+		//A natural blackjack happens when:
+		// The hand contains exactly two cards.
+		// The total value of those two cards equals 21
 		return handList.size() == 2 && handValue == 21;
 		
 	}
@@ -457,7 +533,7 @@ public class BlackjackGame {
 		
 		//if the word returned has insta then the game ends
 		
-		if(playerBust) { //if playerBust  then player instantly lose
+		if(playerBust) { //if playerBust then player instantly lose
 			return "instaLoss";
 		}
 		else if(dealerBust) { //if dealerBust then the player instantly wins
@@ -525,61 +601,5 @@ public class BlackjackGame {
 			break;	
 		}
 	}
-	
-	
-	//Display
-	
-	
-	
-	/**
-	 * Displays the final outcome of the round after both the player and dealer have finished
-	 * there turn(s).
-	 * 
-	 * Shows whether the player won, lost, tied, or got a blackjack,
-	 * and displays the updated balance afterwards.
-	 * 
-	 * @param result The outcome of the round (eg. "blackjack", "regularwin", "loss", or "tie").
-	 */
-	private void displayResults(String result) { // *Lorenzo You have separate methods for each case in gameplayMenu so I 
-												// 	made this since its all in one method which should be easier to use and call.*
-												// If we can't have it in this class just move it to another but make sure its accessible.
-	    System.out.println();
-	    System.out.println("-------- ROUND RESULTS --------");
-
-	    // Determine message based on result outcome
-	    switch (result.toLowerCase()) {
-	        case "blackjack":
-	            System.out.println("Blackjack! You win payout!");
-	            break;
-
-	        case "regularwin":
-	            System.out.println("You win this round!");
-	            break;
-
-	        case "tie":
-	            System.out.println("It's a tie! Your bet is returned.");
-	            break;
-
-	        case "loss":
-	            System.out.println("Dealer wins this round.");
-	            break;
-
-	        default:
-	            System.out.println("Round done.");
-	            break;
-	    }
-
-	    // Display the updated balance at the end of the round
-	    System.out.println("-------------------------------");
-	    System.out.printf("Your new balance: $%.2f%n", player.getBalance());
-	    System.out.println("-------------------------------\n");
-	}
-
-
-	
-	
-	
-	
-	
 	
 }

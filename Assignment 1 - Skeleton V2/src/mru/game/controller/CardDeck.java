@@ -60,7 +60,13 @@ public class CardDeck {
 	public ArrayList<Card> getDeck() {
 		return deck;
 	}
-
+	
+	/**
+	 * Removes and returns the top card from the deck.
+	 * This is used when dealing a card to the player or dealer.
+	 * 
+	 * @return the top {@code Card} in the deck
+	 */
 	public Card dealCard() {
 		return deck.remove(0);
 	}

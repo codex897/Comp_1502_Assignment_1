@@ -127,22 +127,24 @@ public class GameManager {
 	 * 
 	 */
 	private void searchPlayerMenu() {
-		String userInputSearch = menu.showSearchMenu(); //this shows search menu  and validates  the input in the menu class
-		switch (userInputSearch) {
-			case "t":
-				searchTop();
-				break;
-			
-			case "n": 
-				searchForName();
-				break;
-			
-			case "b":
-				return; //
+		while(true) {
+			String userInputSearch = menu.showSearchMenu(); //this shows search menu  and validates  the input in the menu class
+			switch (userInputSearch) {
+				case "t":
+					searchTop();
+					return;
 				
-			default:
-				menu.showInputErrorMessage();
-		
+				case "n": 
+					searchForName();
+					return;
+				
+				case "b":
+					return; //
+					
+				default:
+					menu.showInputErrorMessage();
+			
+			}
 		}
 	}
 	
@@ -210,16 +212,12 @@ public class GameManager {
 	}
 
 	/**
-	 * This method calls the........................................................
-	 * 
-	 * @return the player object after the game is played out
-	 * @param userName the current player
+	 * This method initializes the BlakcjackGame class and starts the blackjack game
+	 * @param userName the current player playing
 	 */
-	private Player playGame(Player userName) {
-		// TODO logic for playing the game
-		//acccepst the player object
+	private void playGame(Player userName) {
 		BlackjackGame blackjack = new BlackjackGame(userName);
-		return null;
+		
 		
 		
 	}

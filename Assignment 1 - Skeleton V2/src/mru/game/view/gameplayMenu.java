@@ -177,7 +177,7 @@ public class gameplayMenu {
 	 */
 	public void showWin(double prize) {
 		System.out.println("");
-		System.out.println("You WON $" + prize);
+		System.out.println(String.format("You WON $%.2f", prize));
 	}
 	
 	/**
@@ -186,7 +186,7 @@ public class gameplayMenu {
 	 */
 	public void showLoss(double bet) {
 		System.out.println("");
-		System.out.println("You LOST $" + bet);
+		System.out.println(String.format("You LOST $%.2f", bet));
 	}
 	
 	/**
